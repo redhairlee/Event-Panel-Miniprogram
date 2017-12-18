@@ -1,0 +1,20 @@
+{
+  "pages": [
+    "pages/index/index",
+    "pages/list/list",
+    "pages/details/details",
+    "pages/qr/qr",
+	"pages/invitation/invitation",
+	"pages/signup/signup",
+	"pages/confirm/confirm",
+    "pages/rate/rate",
+	"pages/user/user",
+    "pages/logs/logs"
+  ],
+  "window": {
+    "backgroundTextStyle": "light",
+    "navigationBarBackgroundColor": "#fff",
+    "navigationBarTitleText": "Event Panel 纷沓",
+    "navigationBarTextStyle": "black"
+  }
+}

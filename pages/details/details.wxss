@@ -1,0 +1,31 @@
+/* pages/details/details.wxss */
+
+#main-container {
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+}
+
+#event-name-container {
+    text-align: center;
+    font-size: 48rpx;
+}
+
+#event-info-container {
+    text-align: center;
+    font-size: 24rpx;
+    color: #666;
+}
+
+#event-map-container {
+    flex: 1 1 auto;
+    margin-left: -40rpx;
+    margin-right: -40rpx;
+    width: auto !important;
+    height: auto !important;
+}
+
+#event-intro-container {
+    font-size: 0.625rem;
+    color: #666;
+}

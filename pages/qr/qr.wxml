@@ -1,0 +1,18 @@
+<!--pages/qr/qr.wxml-->
+<view id="main-container" style="background-image: url('https://epadmin.rfistudios.com.cn{{eventBackground}}')">
+    <view id="card-container">
+        <view id="card-body-container">
+            <view id="qr-container" class="margin-bottom-10">
+                <image src="{{qrCodeURL}}" alt="" mode="aspectFit"></image>
+            </view>
+            <view id="qr-intro-container">
+                <text class="text-center">请于活动当天，将此二维码展示给现场负责签到的工作人员进行扫码，以完成签到。</text>
+            </view>
+        </view>
+        <view id="card-footer-container">
+            <view id="form-button" bindtap='gotoPageDetails'>
+                活动详情
+            </view>
+        </view>
+    </view>
+</view>

@@ -1,0 +1,88 @@
+/**index.wxss**/
+
+#main-container {
+    background-color: #ebebeb;
+}
+
+#card-body-container {
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+#user-header-container {
+    flex: 4 1 auto;
+    overflow: hidden;
+    position: relative;
+}
+
+#user-header-back-container {
+    background: #fff;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+}
+
+#user-header-info-container {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+#user-header-info-head {
+    display: inline-block;
+    width: 125rpx;
+    height: 125rpx;
+    border-radius: 125rpx;
+    overflow: hidden;
+}
+
+#user-header-info-head image {
+    width: 125rpx;
+    height: 125rpx;
+}
+
+#user-header-info-name {
+    font-size: 2rem;
+    margin-bottom: 0;
+}
+
+#user-header-info-telephone {
+    font-size: 0.75rem;
+    color: #333;
+    margin-bottom: 0;
+}
+
+#user-header-info-other {
+    font-size: 0.75rem;
+    color: #999;
+}
+
+#user-info-container {
+    flex: 1 1 auto;
+    display: flex;
+    flex-wrap: wrap;
+}
+
+#user-info-container .info-block-container {
+    flex: 1 1 50%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+#user-info-container .info-block-container span {
+    display: block;
+    font-size: 0.625rem;
+    color: #999;
+}
+
+#user-info-container .info-block-container span:first-child {
+    display: block;
+    font-size: 1.5rem;
+    color: #333;
+}

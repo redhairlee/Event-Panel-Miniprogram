@@ -1,0 +1,24 @@
+/* pages/qr/qr.wxss */
+
+#main-container {
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+}
+
+#qr-container {
+    width: 400rpx;
+    height: 400rpx;
+    margin: 0 auto 20rpx auto;
+}
+
+#qr-container image {
+    display: block;
+    width: 400rpx;
+    height: 400rpx;
+}
+
+#qr-intro-container {
+    font-size: 24rpx;
+    color: #666;
+}

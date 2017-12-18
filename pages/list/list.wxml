@@ -1,0 +1,18 @@
+<!--pages/list-signin/list-signin.wxml-->
+<view id='event-nav-top'>
+    <view class="{{category=='signin' ? 'selected': ''}}" data-category="signin" bindtap='eventNavTap'>待参加</view>
+    <view class="{{category=='rate' ? 'selected': ''}}" data-category="rate" bindtap='eventNavTap'>待评价</view>
+    <view class="{{category=='signed' ? 'selected': ''}}" data-category="signed" bindtap='eventNavTap'>已参加</view>
+</view>
+<scroll-view scroll-y="true" id="event-list-container">
+    <view wx:for="{{arrayEvents}}" class="event-block-container" data-event-id="{{item.EventId}}" data-session-id="{{item.SessionId}}" bindtap="gotoDetails">
+		<image src='http://epadmin.rfistudios.com.cn{{item.ListUrl}}' mode='widthFix'></image>
+        <view class="event-info-container">
+            <view class="event-title-container">
+                {{item.EventName}}
+            </view>
+            <text class="event-date-continer">{{item.StartTime}}</text> @
+            <text class="event-location-container">{{item.Address}}</text>
+        </view>
+    </view>
+</scroll-view>

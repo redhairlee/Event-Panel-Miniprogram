@@ -1,0 +1,2 @@
+<!--pages/invitation/invitation.wxml-->
+<web-view src="{{url}}"></web-view>

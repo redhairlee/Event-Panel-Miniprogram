@@ -1,0 +1,22 @@
+<!--pages/details/details.wxml-->
+<view id="main-container" style="background-image: url('https://epadmin.rfistudios.com.cn{{eventBackground}}')">
+    <view id="card-container">
+        <!--<view id="card-header-container"></view>-->
+        <view id="card-body-container">
+            <view id="event-name-container" class="margin-bottom-20">{{eventName}}</view>
+            <view id="event-info-container" class="margin-bottom-20">
+                <i class="fa fa-clock-o" aria-hidden="true"></i> {{eventDatetime}} |
+                <i class="fa fa-map-marker" aria-hidden="true"></i> {{eventVenue}}
+            </view>
+            <map id="event-map-container" longitude="{{longitude}}" latitude="{{latitude}}" markers="{{markers}}" scale="16" show-location="true" class="margin-bottom-20"></map>
+            <view id="event-intro-container">
+                <text>{{eventIntro}}</text>
+            </view>
+        </view>
+        <view id="card-footer-container">
+            <view id="form-button" data-event-id="{{eventId}}" data-session-id="{{sessionId}}" bindtap='gotoPageQR'>
+                现场签到
+            </view>
+        </view>
+    </view>
+</view>
