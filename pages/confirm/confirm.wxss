@@ -1,1 +1,6 @@
 /* pages/confirm/confirm.wxss */
+
+#main-container {
+    padding-bottom: 150rpx;
+    box-sizing: border-box;
+}

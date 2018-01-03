@@ -7,9 +7,11 @@
 	"pages/invitation/invitation",
 	"pages/signup/signup",
 	"pages/confirm/confirm",
+	"pages/signin/signin",
     "pages/rate/rate",
 	"pages/user/user",
-    "pages/logs/logs"
+    "pages/logs/logs",
+    "pages/employee/employee"
   ],
   "window": {
     "backgroundTextStyle": "light",

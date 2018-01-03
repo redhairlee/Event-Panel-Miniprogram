@@ -1,22 +1,52 @@
-<!--pages/details/details.wxml-->
-<view id="main-container" style="background-image: url('https://epadmin.rfistudios.com.cn{{eventBackground}}')">
-    <view id="card-container">
-        <!--<view id="card-header-container"></view>-->
-        <view id="card-body-container">
-            <view id="event-name-container" class="margin-bottom-20">{{eventName}}</view>
-            <view id="event-info-container" class="margin-bottom-20">
-                <i class="fa fa-clock-o" aria-hidden="true"></i> {{eventDatetime}} |
-                <i class="fa fa-map-marker" aria-hidden="true"></i> {{eventVenue}}
-            </view>
-            <map id="event-map-container" longitude="{{longitude}}" latitude="{{latitude}}" markers="{{markers}}" scale="16" show-location="true" class="margin-bottom-20"></map>
-            <view id="event-intro-container">
-                <text>{{eventIntro}}</text>
+<scroll-view id="main-container" class="{{isBlur?'filter':''}} marginBottom125" scroll-y="true">
+
+    <view class="marginBottom20 pageTitle">{{eventName}}</view>
+    <view class="event-block-container blockShadow">
+        <image src="https://epadmin.rfistudios.com.cn{{eventImage}}" mode="widthFix"></image>
+    </view>
+    <view class="event-info-container marginLeftRight50 marginBottom30">
+        <view class='event-info-container-item'>
+            <image src='../../assets/images/index/task-management.png' mode="widthFix"></image> {{eventDatetime}}</view>
+        <view class='event-info-container-item'>
+            <image src='../../assets/images/index/map.png' mode="widthFix"></image> {{eventVenue}}</view>
+    </view>
+    <view class='splitLine marginBottom30'></view>
+    <view class="eventSummary textCenter marginBottom20 marginLeftRight50">
+        {{eventIntro}}
+    </view>
+    <view class="eventSummary textCenter marginBottom20">
+        <view>{{SeatNumber}}</view>
+        <view>{{Gift}}</view>
+    </view>
+     <!-- <view class="{{isShow?'hide':''}} blockRadius blockShadow marginLeftRight25 marginBottom30">
+         <map id='eventMap' longitude="{{longitude}}" latitude="{{latitude}}" markers="{{markers}}" scale="16" show-location="true"></map> 
+    </view>  -->
+
+
+
+    <view hidden="{{maskHidden}}" class="mask"></view>
+    <view class="canvas-box">
+        <canvas hidden="{{canvasHidden}}" style="width: 686rpx;height: 686rpx;background:#f1f1f1;" canvas-id="mycanvas" />
+    </view>
+</scroll-view>
+
+<view class="{{isBlur?'filter':''}} buttonGroup col2 blockRadius blockShadow">
+    <view class='button paddingTopBottom25' bindtap='gotoDestination'>地图导航</view>
+    <view class="button paddingTopBottom25" data-event-id="{{eventId}}" data-session-id="{{sessionId}}" bindtap='gotoPageQR'>
+        现场签到
+    </view>
+</view>
+
+<view id='QRbox' class="{{isShow?'isShow':''}}" bindtap='hideQRbox'>
+    <view id="qr-card-body-container">
+        <view id="qr-container" class="margin-bottom-10">
+            <view class="img-box">
+                <image src="{{imagePath}}" alt="" mode="scaleToFill"></image>
             </view>
         </view>
-        <view id="card-footer-container">
-            <view id="form-button" data-event-id="{{eventId}}" data-session-id="{{sessionId}}" bindtap='gotoPageQR'>
-                现场签到
-            </view>
+        <view id="qr-intro-container" class='marginTopBottom25'>
+            <text class="text-center">请于活动当天，将此二维码展示给现场负责签到的工作人员进行扫码，以完成签到。</text>
         </view>
     </view>
+
 </view>

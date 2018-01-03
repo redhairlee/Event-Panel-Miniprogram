@@ -1,0 +1,15 @@
+<!--pages/employee/employee.wxml-->
+<view id="main-container">
+    <view class="marginBottom50 pageTitle">工作人员绑定</view>
+    <view class="formInput marginLeftRight50 marginBottom30">
+        <label>姓名</label>
+        <input type="text" name="inputName" id="inputName" value="" placeholder="请填写您的真实姓名" bindinput='inputName'></input>
+    </view>
+    <view class="formInput marginLeftRight50 marginBottom30">
+        <label>手机</label>
+        <input type="tel" name="inputTelephone" bindinput='inputValue' id="inputTelephone" value="" placeholder="请填写您的手机号码"></input>
+    </view>
+</view>
+<view class='buttonGroup blockRadius blockShadow'>
+    <view form-type='submit' disabled='{{isConfirm}}' bindtap='setStuff'>确认绑定</view>
+</view>

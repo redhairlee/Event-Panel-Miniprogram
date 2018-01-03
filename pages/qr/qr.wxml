@@ -3,7 +3,9 @@
     <view id="card-container">
         <view id="card-body-container">
             <view id="qr-container" class="margin-bottom-10">
-                <image src="{{qrCodeURL}}" alt="" mode="aspectFit"></image>
+                <view class="img-box">
+                    <image src="{{imagePath}}" alt="" mode="scaleToFill"></image>
+                </view>
             </view>
             <view id="qr-intro-container">
                 <text class="text-center">请于活动当天，将此二维码展示给现场负责签到的工作人员进行扫码，以完成签到。</text>
@@ -14,5 +16,9 @@
                 活动详情
             </view>
         </view>
+    </view>
+    <view hidden="{{maskHidden}}" class="mask"></view>
+    <view class="canvas-box">
+        <canvas hidden="{{canvasHidden}}" style="width: 686rpx;height: 686rpx;background:#f1f1f1;" canvas-id="mycanvas" />
     </view>
 </view>

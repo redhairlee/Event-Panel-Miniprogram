@@ -9,6 +9,7 @@
     width: 100%;
     height: 100rpx;
     display: flex;
+    color: #999;
 }
 
 #event-nav-top view {
@@ -22,11 +23,14 @@
 }
 
 #event-nav-top view.selected {
+    color: #000;
     border-bottom: 5rpx solid #666;
 }
 
 #event-list-container {
     width: 100%;
     height: calc(100% - 100rpx);
-    background-color: #ebebeb;
+    position: absolute;
+	bottom: 0;
+	left: 0;
 }

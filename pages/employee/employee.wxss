@@ -1,0 +1,4 @@
+/* pages/employee/employee.wxss */
+.form-input{
+    margin: 20rpx 0
+}

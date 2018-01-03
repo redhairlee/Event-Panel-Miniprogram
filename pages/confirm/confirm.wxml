@@ -1,3 +1,51 @@
 <!--pages/confirm/confirm.wxml-->
-<text>报名页</text>
-<text>获取参数：{{eventId}}</text>
+
+<scroll-view id="main-container" scroll-y="true">
+    <view class="marginBottom20 pageTitle">{{arrayEventsInfo.Name}}</view>
+
+    <view class="event-block-container blockShadow">
+        <image src="https://epadmin.rfistudios.com.cn{{arrayEventsInfo.ListUrl}}" mode="widthFix"></image>
+    </view>
+
+    <view class="marginLeftRight50" wx:if="{{userId}}">
+        <view class='eventTitle marginBottom30'>请确认您的个人信息：</view>
+        <view class='formInfo col2 marginBottom30'>
+            <view>
+                姓名 : {{userInfo.ChineseName}} {{userInfo.EnglishName}}
+            </view>
+            <view>
+                手机 : {{userInfo.CellPhone}}
+            </view>
+        </view>
+        <view class='splitLine marginBottom30'></view>
+        <view class='eventTitle marginBottom30'>请选择确认参加的场次：</view>
+        <radio-group bindchange="checkboxChange">
+            <label class="checkbox" wx:for="{{sessionInfo}}">
+                <view>
+                    <radio value="{{item.SessionId}}" />{{item.Name}} ({{item.StartTime}})
+                </view>
+            </label>
+        </radio-group>
+
+    </view>
+
+    <view class="marginLeftRight50" wx:else>
+        <view class='eventTitle marginBottom30'>请输入您的电话号码：</view>
+        <view class="formInput marginBottom30">
+            <label>手机</label>
+            <input name="inputCheckTelephone" id="inputCheckTelephone" placeholder="请填写您的常用手机号码" bindinput='inputValue' placeholder-class='phColor'></input>
+        </view>
+    </view>
+
+    <view class='splitLine marginLeftRight50" marginBottom30'></view>
+    <view class='eventSummary marginLeftRight50"'>如遇问题，请联系活动主办方工作人员：{{arrayEventsInfo.OrganizerContact}}</view>
+</scroll-view>
+
+
+
+<view wx:if="{{userId}}">
+    <view form-type='submit' bindtap='confirmInfo' disabled='{{isConfirm}}' class='buttonGroup blockRadius blockShadow paddingTopBottom25'>确认参加</view>
+</view>
+<view  wx:else class='buttonGroup blockRadius blockShadow'>
+    <view form-type='submit' bindtap='sighupTap' disabled='{{isConfirm}}' class='buttonGroup blockRadius blockShadow paddingTopBottom25'>身份验证</view>
+</view>

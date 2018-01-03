@@ -1,0 +1,15 @@
+/* pages/signin/signin.wxss */
+#card-container #card-header-container{
+	font-size: 22px;
+	color: #333333
+}
+
+#card-footer-container button{
+	height: 37px;
+	background: #666666;
+	color: #fff;
+	line-height: 37px;
+}
+.form-input input{
+    border-bottom: 1px solid #999
+}

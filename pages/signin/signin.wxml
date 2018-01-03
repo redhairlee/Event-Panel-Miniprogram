@@ -1,0 +1,40 @@
+<!--pages/confirm/confirm.wxml-->
+
+<view id="main-container">
+    <view class="marginBottom50 pageTitle">签到</view>
+
+
+    <view id="formSignin" wx:if="{{isActionId}}">
+        <view class='formInfo col2 marginLeftRight50 marginBottom30'>
+            <view>姓名 : {{userInfo.ChineseName}} {{userInfo.EnglishName}}</view>
+            <view>手机 : {{userInfo.CellPhone}}</view>
+            <view>公司：{{userInfo.Company}}</view>
+            <view>职位：{{userInfo.Title}}</view>
+        </view>
+        <view class='splitLine marginBottom30'></view>
+        <view class="marginLeftRight50 eventTitle marginBottom30">请勾选嘉宾确认签到的场次：</view>
+        <radio-group bindchange="checkboxChange" class="marginLeftRight50">
+            <label class="radio" wx:for='{{sessionInfo}}'>
+                <view>
+                    <radio value="{{item.SessionId}}" />{{item.Name}} ({{item.StartTime}})
+                </view>
+            </label>
+        </radio-group>
+    </view>
+
+    <view id="formCheck" wx:else>
+        <view class="formInfo marginLeftRight50 marginBottom30">请填写嘉宾的常用手机号来读取嘉宾的个人信息</view>
+        <view class="formInput marginLeftRight50 marginBottom30">
+            <label>手机</label>
+            <input type="tel" name="inputTelephone" bindinput='getCellPhone' id="inputTelephone" value="" placeholder="请填写嘉宾的手机号码"></input>
+        </view>
+    </view>
+
+</view>
+
+<view class='buttonGroup blockRadius blockShadow' wx:if="{{isActionId}}" bindtap='signInConfirm'>
+    <view form-type='submit' class='paddingTopBottom25'>确认签到</view>
+</view>
+<view class='buttonGroup blockRadius blockShadow' wx:else bindtap='userConfirm'>
+    <view form-type='submit' disabled='{{isCellNull}}' class='paddingTopBottom25'>身份验证</view>
+</view>

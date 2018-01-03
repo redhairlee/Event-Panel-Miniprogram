@@ -1,36 +1,30 @@
 <!--index.wxml-->
 <view id="main-container">
-    <view id="card-container">
-        <view id="card-body-container">
-            <view id="user-header-container">
-                <view id="user-header-back-container"></view>
-                <view id="user-header-info-container">
-                    <view id="user-header-info-head">
-                        <image src="{{userAvatar}}" mode="aspectFit"></image>
-                    </view>
-                    <text id="user-header-info-name">{{userNickname}}</text>
-                    <text id="user-header-info-telephone">{{userPhone}}</text>
-                    <text id="user-header-info-other">{{userCompany}} | {{userTitle}}</text>
-                </view>
+    <view id="user-header-container">
+        <view id="user-header-info-container">
+            <view id="user-header-info-head" class='blockShadow'>
+                <image src="{{userAvatar}}" mode="aspectFit"></image>
             </view>
-            <view id="user-info-container">
-                <view bindtap="gotoListSignin" class="info-block-container">
-                    <span>3</span>
-                    <span>待参加</span>
-                </view>
-                <view bindtap="gotoListRate" class="info-block-container">
-                    <span>2</span>
-                    <span>待评价</span>
-                </view>
-                <view bindtap="gotoListAll" class="info-block-container">
-                    <span>1</span>
-                    <span>已参加</span>
-                </view>
-                <view class="info-block-container">
-                    <span></span>
-                    <span></span>
-                </view>
-            </view>
+            <text id="user-header-info-name" class='pageTitle'>{{userNickname}}</text>
+            <text id="user-header-info-telephone">{{userPhone}}</text>
+            <text id="user-header-info-other" wx:if="{{isShow}}">{{userCompany}} | {{userTitle}}</text>
         </view>
     </view>
+    <view class='splitLine'></view>
+    <view id="user-info-container">
+        <view bindtap="gotoListSignin" class="info-block-container">
+            <span>{{NeedToJoin}}</span>
+            <span>待参加</span>
+        </view>
+        <view bindtap="gotoListRate" class="info-block-container">
+            <span>{{NeedToFeedBack}}</span>
+            <span>待评价</span>
+        </view>
+        <view bindtap="gotoListAll" class="info-block-container">
+            <span>{{HaveJoined}}</span>
+            <span>已参加</span>
+        </view>
+    </view>
+
+
 </view>
