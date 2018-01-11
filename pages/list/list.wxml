@@ -4,7 +4,7 @@
     <view class="{{category=='rate' ? 'selected': ''}}" data-category="rate" bindtap='eventNavTap'>待评价</view>
     <view class="{{category=='signed' ? 'selected': ''}}" data-category="signed" bindtap='eventNavTap'>已参加</view>
 </view>
-<scroll-view scroll-y="true" id="event-list-container">
+<scroll-view scroll-y="true" id="event-list-container" scroll-top="{{scrollTop}}">
     <view class='eventSummary textCenter marginTopBottom25' wx:if="{{arrNull}}">暂无待参加的活动</view>
     <view wx:for="{{arrayEvents}}" class="event-block-container blockShadow">
         <image src='http://epadmin.rfistudios.com.cn{{item.ListUrl}}' mode='widthFix' data-event-id="{{item.EventId}}" data-session-id="{{item.SessionId}}" bindtap="gotoDetails"></image>
@@ -13,4 +13,5 @@
             <text class="eventSummary">{{i.EventWhen}} @ {{i.EventWhere}}</text>
         </view>
     </view>
+    <view style='width:100%;height:5rpx'></view>
 </scroll-view>

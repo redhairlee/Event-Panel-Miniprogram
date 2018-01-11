@@ -8,7 +8,7 @@
 		"newFeature": true
 	},
 	"compileType": "miniprogram",
-	"libVersion": "1.7.2",
+	"libVersion": "1.7.4",
 	"appid": "wx1d79625d92c04591",
 	"projectname": "Event%20Panel",
 	"condition": {
@@ -20,8 +20,12 @@
 			"current": -1,
 			"list": []
 		},
+		"game": {
+			"current": -1,
+			"list": []
+		},
 		"miniprogram": {
-			"current": 3,
+			"current": -1,
 			"list": [
 				{
 					"id": 0,
@@ -30,19 +34,13 @@
 					"query": "url=https://projects.rfistudios.com.cn/rfi/invitation/"
 				},
 				{
-					"id": -1,
+					"id": 1,
 					"name": "测试在线确认",
 					"pathName": "pages/confirm/confirm",
-					"query": "eventId=39bd92c5-3fc5-48ef-b403-138da7d80e7a"
+					"query": "eventId=0beacbf9-341e-48da-912d-d3baa95e1513"
 				},
 				{
-					"id": -1,
-					"name": "测试QR",
-					"pathName": "pages/qr/qr",
-					"query": "actionId=1861"
-				},
-				{
-					"id": 3,
+					"id": 2,
 					"name": "测试现场签到",
 					"pathName": "pages/signin/signin",
 					"query": "actionId=3934"

@@ -28,6 +28,7 @@ Page({
     onLoad: function () {
         var that = this;
         if (app.globalData.arrSessions) {
+            console.log(app.globalData.arrSessions);
             var res = app.globalData.arrSessions;
             var arrNeedToJoin = res.EventSessionsNeedToJoin;
             var NeedToJoin = []
@@ -38,17 +39,26 @@ Page({
                 HaveJoined: res.EventSessionsHaveJoined.length
             })
         }
-
-        wx.getStorage({
-            key: 'weChatUserInfo',
+        wx.getUserInfo({
+            withCredentials: true,
             success: function (res) {
-                console.log(res)
+                console.log(res);
                 that.setData({
-                    userNickname: res.data.nickName,
-                    userAvatar: res.data.avatarUrl
+                    userNickname: res.userInfo.nickName,
+                    userAvatar: res.userInfo.avatarUrl
                 })
             }
-        });
+        })
+        // wx.getStorage({
+        //     key: 'weChatUserInfo',
+        //     success: function (res) {
+        //         console.log(res)
+        //         that.setData({
+        //             userNickname: res.data.nickName,
+        //             userAvatar: res.data.avatarUrl
+        //         })
+        //     }
+        // });
         wx.getStorage({
             key: 'epUserInfo',
             success: function (result) {
@@ -69,5 +79,22 @@ Page({
                 }
             }
         });
+        // console.log(this.data.userAvatar)
+    },
+    onShow:function(){
+        wx.getUserInfo({
+            withCredentials: true,
+            success: function (res) {
+                console.log(res);
+                wx.setStorage({
+                    key: 'weChatUserInfo',
+                    data: {
+                        nickName: res.userInfo.nickName,
+                        avatarUrl: res.userInfo.avatarUrl
+                    },
+                })
+            }
+        })
+        // console.log(this.data.avatarUrl)
     }
 })

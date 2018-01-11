@@ -60,6 +60,14 @@ img, video {
     margin-bottom: 50rpx;
 }
 
+.marginBottom100 {
+    margin-bottom: 100rpx;
+}
+
+.marginBottom200 {
+    margin-bottom: 200rpx;
+}
+
 .marginLeftRight50 {
     margin-left: 50rpx;
     margin-right: 50rpx;
@@ -69,10 +77,16 @@ img, video {
     margin-left: 25rpx;
     margin-right: 25rpx;
 }
+
 .marginTopBottom25 {
     margin-top: 25rpx;
     margin-bottom: 25rpx;
 }
+
+.paddingBottom130 {
+    padding-bottom: 130rpx;
+}
+
 .hide {
     display: none;
     opacity: 0;
@@ -87,12 +101,24 @@ img, video {
     text-align: right;
 }
 
+#nav-bottom.bottom68 {
+    bottom: 68rpx;
+}
+
 .splitLine {
     width: 650rpx;
     margin-left: auto;
     margin-right: auto;
     height: 1rpx;
     background-color: #bbb;
+}
+
+#bottomIPX {
+    position: fixed;
+    bottom: 0 !important;
+    width: 100%;
+    height: 68rpx;
+    background: #fff;
 }
 
 #main-container {
@@ -108,7 +134,9 @@ img, video {
     font-size: 48rpx;
     font-weight: bold;
     color: #111;
-    margin: 50rpx;
+    margin-top: 50rpx;
+    margin-right: 50rpx;
+    margin-left: 50rpx;
     position: relative;
 }
 
@@ -227,28 +255,39 @@ img, video {
     background-color: #000;
     color: #fff;
     font-size: 26rpx;
-    margin: 0 25rpx;
-    
-    width: calc(100% - 50rpx);
+    /* margin:0 25rpx; */
+    width: 700rpx;
     position: fixed;
     z-index: 3;
     bottom: 25rpx;
+    left: 25rpx;
+}
+
+.buttonGroup.isIPX {
+    bottom: 93rpx !important;
 }
 
 .button {
-    flex: 1 1 auto;
+    flex: 1 1 100%;
     text-align: center;
 }
-.paddingTopBottom25{
+
+.formBotton {
+    background: #000;
+    border: none;
+    color: #fff;
+}
+
+.paddingTopBottom25 {
     padding: 25rpx 0;
 }
+
 .buttonGroup.col2 .button {
     flex: 1 1 50%;
-    
 }
 
 .button:first-of-type {
-    border-right: 1rpx solid #fff;
+    border-right: 1rpx solid #333;
 }
 
 .formInfo {
@@ -269,6 +308,7 @@ img, video {
     display: flex;
     justify-content: center;
     align-items: center;
+    padding: 10rpx 0;
 }
 
 .formInput label {

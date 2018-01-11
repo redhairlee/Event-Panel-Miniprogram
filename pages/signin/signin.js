@@ -7,8 +7,11 @@ Page({
 	 */
 	data: {
 		isActionId: '',
-		isCellNull: 1,
-		isConfirm: 1
+		isCellNull: 0,
+		isConfirm: 0,
+        isIPX: app.globalData.isIPX ? true : false,
+        isUserInfo:false,
+        isSessionInfo: false
 	},
 
 	/**
@@ -16,20 +19,19 @@ Page({
 	 */
 	onLoad: function (options) {
 		var that = this;
-		wx.getStorage({
-			key: 'epUserInfo',
-			success: function (res) {
-				console.log(res)
-			},
-		})
+		// wx.getStorage({
+		// 	key: 'epUserInfo',
+		// 	success: function (res) {
+		// 		console.log(res)
+		// 	},
+		// })
 
-		console.log(options.actionId);
+		// console.log(options.actionId);
 		if (options.actionId) {
 			that.setData({
 				ActionIds: options.actionId,
 				isActionId: true
 			});
-
 			var t = setInterval(function () {
 				if (app.globalData.wechatOpenId) {
 					wx.request({
@@ -40,16 +42,33 @@ Page({
 							ActionIds: options.actionId
 						},
 						success: function (res) {
-							console.log(res.data.Data)
-							var res = res.data.Data
-							var arr = res.Sessions;
-                            app.timeFormat(arr);
-							console.log(arr)
-							that.setData({
-								sessionInfo: arr,
-								UserId: res.UserProfile.UserId,
-								userInfo: res.UserProfile.Profile
-							});
+							console.log(res.data)
+                            if(!res.data.IsError){
+                                if(res.data.Data){
+                                    var res = res.data.Data
+                                    that.setData({
+                                        UserId: res.UserProfile.UserId,
+                                        userInfo: res.UserProfile.Profile
+                                    });
+                                    if (res.Sessions) {
+                                        var arr = res.Sessions;
+                                        app.timeFormat(arr);
+                                        that.setData({
+                                            sessionInfo: arr,
+                                        });
+                                    }else{
+                                        that.setData({
+                                            isSessionInfo: true
+                                        })
+                                    }
+                                }else{
+                                    that.setData({
+                                        isUserInfo:true,
+                                        isSessionInfo: true
+                                    })
+                                }
+                                
+                            }
 						}
 					});
 					clearInterval(t);
@@ -69,13 +88,13 @@ Page({
 		})
 		// var isCellNull = this.data.cellPhone ? 0 : 1
 		this.setData({
-			isCellNull: 0
+			isCellNull: 1
 		})
 	},
 	//身份验证
 	userConfirm: function () {
 		var that = this
-        if (that.data.isCellNull == 0){
+        if (that.data.isCellNull == 1){
             wx.request({
                 url: 'https://epadmin.rfistudios.com.cn/api/WeChatEvent/GetUserSessionByManual',
                 method: 'POST',
@@ -106,7 +125,7 @@ Page({
 	//确认签到
 	signInConfirm: function () {
 		var that = this;
-        if (that.data.isConfirm == 0){
+        if (that.data.isConfirm == 1){
             console.log(that.data)
             wx.request({
                 url: 'https://epadmin.rfistudios.com.cn/api/WeChatEvent/SignIn',
@@ -119,12 +138,38 @@ Page({
                 },
                 success: function (res) {
                     if (!res.IsError) {
-                        wx.redirectTo({
-                            url: '../index/index',
-                        })
+                        wx.showModal({
+                            title: '签到成功',
+                            content: '点击确定返回首页',
+                            showCancel: false,
+                            success: function (res) {
+                                if (res.confirm) {
+                                    // console.log(res);
+                                    wx.redirectTo({
+                                        url: '../index/index',
+                                    })
+                                } else if (res.cancel) {
+
+                                }
+                            }
+                        });
                     }
                 }
             })
+        }else{
+            wx.showModal({
+                title: '请选择签到的场次',
+                content: '',
+                showCancel: false,
+                success: function (res) {
+                    if (res.confirm) {
+
+
+                    } else if (res.cancel) {
+
+                    }
+                }
+            });
         }
 		
 	},
@@ -134,7 +179,7 @@ Page({
 		})
 		// var isConfirm = this.data.sessionIds.length > 0 ? 0 : 1
 		this.setData({
-			isConfirm: 0,
+			isConfirm: 1,
 		})
 	},
 	/**

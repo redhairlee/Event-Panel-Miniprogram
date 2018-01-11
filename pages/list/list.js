@@ -5,53 +5,47 @@ Page({
         arrNull: false,
     },
     eventNavTap: function (e) {
-        //console.log(e);
-        var app = getApp();
+        var that = this
 
-        if (getApp().globalData.arrayEventsResult) {
-            var res = getApp().globalData.arrayEventsResult;
-            var arrNeedToJoin = res.EventSessionsNeedToJoin;
-            var arrNeedToFeedBack = res.EventSessionsNeedToFeedBack
-            var arrHaveJoined = res.EventSessionsHaveJoined;
-            this.setData({
-                category: e.target.dataset.category,
-                //arrayEvents: res
-            });
-            if (e.target.dataset.category == 'signin') {
-                // console.log(arrNeedToJoin)
-                arrNeedToJoin.sort(app.compare("StartTime"))
-                app.reCom(arrNeedToJoin)
-                var NeedToJoin = []
-                app.screenTime(arrNeedToJoin, NeedToJoin)
-                if (NeedToJoin.length == 0) {
-                    this.setData({
-                        arrNull: true
-                    })
-                }
-                this.setData({
-                    arrayEvents: NeedToJoin
-                });
-            } else if (e.target.dataset.category == 'rate') {
-                // console.log(arrNeedToFeedBack)
-                this.setData({
-                    arrNull: false
+        that.setData({
+            category: e.target.dataset.category,
+        });
+        if (e.target.dataset.category == 'signin') {
+            if (that.data.NeedToJoin.length == 0) {
+                that.setData({
+                    arrNull: true
                 })
-                arrNeedToFeedBack.sort(app.compare("StartTime"))
-                app.reCom(arrNeedToFeedBack)
-                this.setData({
-                    arrayEvents: arrNeedToFeedBack
-                });
-            } else if (e.target.dataset.category == 'signed') {
-                // console.log(arrHaveJoined)
-                this.setData({
-                    arrNull: false
-                })
-                arrHaveJoined.sort(app.compare("StartTime"))
-                app.reCom(arrHaveJoined)
-                this.setData({
-                    arrayEvents: arrHaveJoined
-                });
             }
+            that.setData({
+                arrayEvents: that.data.NeedToJoin,
+                scrollTop: 0
+            });
+        } else if (e.target.dataset.category == 'rate') {
+            if (that.data.arrNeedToFeedBack){
+                that.setData({
+                    arrayEvents: that.data.arrNeedToFeedBack,
+                    scrollTop: 0,
+                    arrNull: false
+                });
+            }else{
+                that.setData({
+                    arrNull: true
+                })
+            }
+            
+        } else if (e.target.dataset.category == 'signed') {
+            if (that.data.arrHaveJoined){
+                that.setData({
+                    arrayEvents: that.data.arrHaveJoined,
+                    scrollTop: 0,
+                    arrNull: false
+                });
+            }else{
+                that.setData({
+                    arrNull: true
+                })
+            }
+            
         }
         //console.log(getApp().globalData.arrayEventsResult);
     },
@@ -62,58 +56,87 @@ Page({
         })
     },
     onLoad: function (options) {
+        // console.log(app.globalData.arrSessions)
         var that = this;
-        // 页面初始化 options为页面跳转所带来的参数
-
-        if (getApp().globalData.arrayEventsResult) {
-            var res = getApp().globalData.arrayEventsResult;
-            console.log(res)
-            var arrNeedToJoin = res.EventSessionsNeedToJoin;
-            var arrNeedToFeedBack = res.EventSessionsNeedToFeedBack
-            var arrHaveJoined = res.EventSessionsHaveJoined;
-            console.log(options.category)
-            that.setData({
-                category: options.category
-            })
-            if (options.category == 'signin') {
-                // console.log(arrNeedToJoin)
-                arrNeedToJoin.sort(app.compare("StartTime"))
-                app.reCom(arrNeedToJoin)
-                var NeedToJoin = []
-                app.screenTime(arrNeedToJoin, NeedToJoin)
-                if (NeedToJoin.length == 0) {
-                    this.setData({
-                        arrNull: true
+        wx.showLoading({
+            title: '加载中',
+        })
+        wx.request({
+            url: 'https://epadmin.rfistudios.com.cn/api/WeChatEvent/GetMyEventSessions?timestamp=' + (new Date()).valueOf(),
+            data: {
+                weChatOpenId: app.globalData.wechatOpenId
+            },
+            header: {
+                'content-type': 'application/json' // 默认值
+            },
+            success: function (res) {
+                // console.log(res.data.Data)
+                wx.hideLoading();
+                if (!res.data.IsError && res.data.Data) {
+                    var arrayMySessions = res.data.Data;
+                    // var arrayMySessions = app.globalData.arrSessions
+                    // console.log(arrayMySessions)
+                    var arrNeedToJoin = arrayMySessions.EventSessionsNeedToJoin;
+                    var arrNeedToFeedBack = arrayMySessions.EventSessionsNeedToFeedBack;
+                    var arrHaveJoined = arrayMySessions.EventSessionsHaveJoined;
+                    // console.log(arrNeedToFeedBack)
+                    // console.log(options.category)
+                    that.setData({
+                        category: options.category
                     })
+                    arrNeedToJoin.sort(app.compare("StartTime"))
+                    app.reCom(arrNeedToJoin)
+                    var NeedToJoin = []
+                    app.screenTime(arrNeedToJoin, NeedToJoin)
+
+                    arrNeedToFeedBack.sort(app.compare("StartTime"))
+                    app.reCom(arrNeedToFeedBack)
+
+                    arrHaveJoined.sort(app.compare("StartTime"))
+                    app.reCom(arrHaveJoined)
+
+                    that.setData({
+                        NeedToJoin: NeedToJoin,
+                        arrNeedToFeedBack: arrNeedToFeedBack,
+                        arrHaveJoined: arrHaveJoined
+                    })
+                    if (options.category == 'signin') {
+                        if (NeedToJoin.length == 0) {
+                            that.setData({
+                                arrNull: true
+                            })
+                        }
+                        that.setData({
+                            arrayEvents: NeedToJoin
+                        });
+                    } else if (options.category == 'rate') {
+                        if (arrNeedToFeedBack){
+                            that.setData({
+                                arrayEvents: arrNeedToFeedBack,
+                                arrNull: false
+                            });
+                        }else{
+                            that.setData({
+                                arrNull: true
+                            })
+                        }
+                    } else if (options.category == 'signed') {
+                        if (arrHaveJoined){
+                            that.setData({
+                                arrayEvents: arrHaveJoined,
+                                arrNull: false
+                            });
+                        }else{
+                            that.setData({
+                                arrNull: true
+                            })
+                        }
+                    }
                 }
-                this.setData({
-                    arrayEvents: NeedToJoin
-                });
-            } else if (options.category == 'rate') {
-                // console.log(arrNeedToFeedBack)
-                this.setData({
-                    arrNull: false
-                })
-
-                arrNeedToFeedBack.sort(app.compare("StartTime"))
-                app.reCom(arrNeedToFeedBack)
-                this.setData({
-                    arrayEvents: arrNeedToFeedBack
-                });
-            } else if (options.category == 'signed') {
-                // console.log(arrHaveJoined)
-                this.setData({
-                    arrNull: false
-                })
-
-                arrHaveJoined.sort(app.compare("StartTime"))
-                app.reCom(arrHaveJoined)
-                this.setData({
-                    arrayEvents: arrHaveJoined
-                });
             }
+        })
+        // console.log(app.globalData.arrSessions)
 
-        }
 
     },
     onReady: function () {

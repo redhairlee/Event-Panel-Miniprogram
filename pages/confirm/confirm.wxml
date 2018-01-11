@@ -18,14 +18,16 @@
             </view>
         </view>
         <view class='splitLine marginBottom30'></view>
-        <view class='eventTitle marginBottom30'>请选择确认参加的场次：</view>
+        <view class='eventTitle marginBottom30' wx:if="{{nullSessions}}">未找到可参加的场次</view>
+        <view class='eventTitle marginBottom30' wx:if="{{!nullSessions}}">请选择确认参加的场次：</view>
         <radio-group bindchange="checkboxChange">
             <label class="checkbox" wx:for="{{sessionInfo}}">
                 <view>
-                    <radio value="{{item.SessionId}}" />{{item.Name}} ({{item.StartTime}})
+                    <radio value="{{item.SessionId}}"/>{{item.Name}} ({{item.StartTime}})
                 </view>
             </label>
         </radio-group>
+        <view class='splitLine marginLeftRight50" marginBottom30'></view>
 
     </view>
 
@@ -37,15 +39,13 @@
         </view>
     </view>
 
-    <view class='splitLine marginLeftRight50" marginBottom30'></view>
-    <view class='eventSummary marginLeftRight50"'>如遇问题，请联系活动主办方工作人员：{{arrayEventsInfo.OrganizerContact}}</view>
+
+    <view class='eventSummary marginLeftRight50 marginBottom50'>如遇问题，请联系活动主办方工作人员：{{arrayEventsInfo.OrganizerContact}}</view>
+
+    <view class='buttonGroup blockRadius blockShadow {{isIPX?"isIPX":""}}' wx:if="{{userId}}">
+        <view bindtap='confirmInfo' class='button paddingTopBottom25'>确认参加</view>
+    </view>
+    <view class='buttonGroup blockRadius blockShadow' wx:else>
+        <view bindtap='sighupTap' class='button paddingTopBottom25'>身份验证</view>
+    </view>
 </scroll-view>
-
-
-
-<view wx:if="{{userId}}">
-    <view form-type='submit' bindtap='confirmInfo' disabled='{{isConfirm}}' class='buttonGroup blockRadius blockShadow paddingTopBottom25'>确认参加</view>
-</view>
-<view  wx:else class='buttonGroup blockRadius blockShadow'>
-    <view form-type='submit' bindtap='sighupTap' disabled='{{isConfirm}}' class='buttonGroup blockRadius blockShadow paddingTopBottom25'>身份验证</view>
-</view>

@@ -6,35 +6,47 @@ App({
         //调用API从本地缓存中获取数据
         // console.log(this)
         var that = this;
-        wx.getStorage({
-            key: 'UserInfo',
-            success: function (res) {
-                console.log(res)
-            },
-        })
+
         var logs = wx.getStorageSync('logs') || []
         logs.unshift(Date.now())
         wx.setStorageSync('logs', logs)
-        // wx.getUserInfo({
-        // 	success: function (res) {
-        //         console.log(res)
-        // 		wx.setStorage({
-        // 			key: 'weChatUserInfo',
-        // 			data: {
-        // 				nickName: res.userInfo.nickName,
-        // 				avatarUrl: res.userInfo.avatarUrl
-        // 			},
-        // 		})
-        // 	}
-        // })
-		/*wx.checkSession({
-			success: function () {
-			
-			},
-			fail: function () {*/
+
+        wx.checkSession({
+            success: function () {
+                wx.getStorage({
+                    key: 'loginData',
+                    success: function (res) {
+                        // console.log(res)
+                        if (res.data.openid) {
+                            console.log(res.data.openid);
+                            that.globalData.wechatOpenId = res.data.openid;
+                            // that.globalData.wechatOpenId = 'o6Ujq0Peg1Hi3o7VEdtsoMINrVyI';
+                        }
+                    },
+                    fail: function () {
+                        that.wechatLogin();
+                    }
+                });
+            },
+            fail: function () {
+                that.wechatLogin();
+            }
+        })
+        wx.getSystemInfo({
+            success: function (res) {
+                console.log(res.model)
+                console.log(res.model.indexOf("iPhone X", 0))
+                if (res.model.indexOf("iPhone X", 0) >= 0) {
+                    that.globalData.isIPX = 1;
+                }
+            }
+        })
+    },
+    wechatLogin: function () {
+        var that = this;
         wx.login({
             success: function (res) {
-                console.log(res)
+                // console.log(res)
                 if (res.code) {
                     wx.request({
                         url: 'https://epadmin.rfistudios.com.cn/miniprogram/server.php',
@@ -46,52 +58,31 @@ App({
                         success: function (res) {
                             console.log(res);
                             that.globalData.wechatOpenId = res.data.openid;
-                            // console.log(that.globalData);
+                            // that.globalData.wechatOpenId = 'o6Ujq0Peg1Hi3o7VEdtsoMINrVyI';
                             wx.setStorage({
                                 key: "loginData",
                                 data: res.data
                             });
                             wx.getSetting({
                                 success(res) {
+                                    // console.log(res)
                                     if (!res.authSetting['scope.userInfo']) {
                                         wx.authorize({
                                             scope: 'scope.userInfo',
                                             success() {
-                                                wx.getUserInfo({
-                                                    withCredentials: true,
-                                                    success: function (res) {
-                                                        console.log(res);
-                                                        wx.setStorage({
-                                                            key: 'weChatUserInfo',
-                                                            data: {
-                                                                nickName: res.userInfo.nickName,
-                                                                avatarUrl: res.userInfo.avatarUrl
-                                                            },
-                                                        })
-                                                        // var loginData = wx.getStorageSync('loginData');
-                                                        // console.log(loginData);
-                                                        // wx.request({
-                                                        //     url: 'https://epadmin.rfistudios.com.cn/miniprogram/server.php',
-                                                        //     method: 'POST',
-                                                        //     data: {
-                                                        //         action: 'userinfo',
-                                                        //         sessionKey: loginData.session_key,
-                                                        //         encryptedData: res.encryptedData,
-                                                        //         iv: res.iv
-                                                        //     },
-                                                        //     success: function (res) {
-                                                        //         console.log(res);
-                                                        //         wx.setStorage({
-                                                        //             key: 'weChatUserInfo',
-                                                        //             data: {
-                                                        //                 nickName: res.data.nickName,
-                                                        //                 avatarUrl: res.data.avatarUrl
-                                                        //             },
-                                                        //         })
-                                                        //     }
-                                                        // });
-                                                    }
-                                                })
+                                                // wx.getUserInfo({
+                                                //     withCredentials: true,
+                                                //     success: function (res) {
+                                                //         console.log(res);
+                                                //         wx.setStorage({
+                                                //             key: 'weChatUserInfo',
+                                                //             data: {
+                                                //                 nickName: res.userInfo.nickName,
+                                                //                 avatarUrl: res.userInfo.avatarUrl
+                                                //             },
+                                                //         })
+                                                //     }
+                                                // })
                                             }
                                         })
                                     }
@@ -102,12 +93,10 @@ App({
                                 url: 'https://epadmin.rfistudios.com.cn/api/WeChatEvent/GetUserProfileByWeChatOpenId',
                                 data: {
                                     weChatOpenId: that.globalData.wechatOpenId
-                                    // weChatOpenId: '243565768'
                                 },
                                 success: function (res) {
-                                    // console.log(res.data.Data)
-                                    console.log(getApp().globalData.wechatOpenId)
-                                    // getApp().globalData.arrayEventsResult = res.data.Data;
+                                    console.log(res.data.Data)
+                                    // console.log(getApp().globalData.wechatOpenId)
                                     if (res.data.Data) {
                                         var userInfo = res.data.Data.Profile;
                                         var userId = res.data.Data.UserId
@@ -131,9 +120,6 @@ App({
                 }
             }
         });
-
-		/*}
-	})*/
     },
     //排序
     compare: function (prop) {
@@ -151,12 +137,15 @@ App({
     },
     //重组
     reCom: function (arr) {
+        // console.log(arr)
         var _this = this;
-        console.log(_this)
+        var tempArray = []
+        // console.log(_this)
+        // var arrLength = arr.length;
         for (var i = 0; i < arr.length; i++) {
+            // console.log(i,arr[i])
             var id = arr[i].EventId;
             arr[i].sessions = [];
-            // console.log(arr[i].StartTime.replace('T', '-'));
             arr[i].sessions.push({
                 sessionId: arr[i].SessionId,
                 sessionName: arr[i].SessionName,
@@ -164,6 +153,7 @@ App({
                 EventWhere: arr[i].EventWhere,
             });
             for (var j = i + 1; j < arr.length; j++) {
+                // console.log(j,arr[j])
                 if (arr[j].EventId == id) {
                     arr[i].sessions.push({
                         sessionId: arr[j].SessionId,
@@ -171,11 +161,29 @@ App({
                         EventWhen: arr[j].StartTime.replace('T', ' ').slice(0, 16),
                         EventWhere: arr[j].EventWhere,
                     });
-                    arr.splice(j, 1);
+                    // console.log(j,arr[j])
+                    // arr.splice(j, 1);
+                    tempArray.push(j)
+                    // console.log(arr)
                 }
+                // console.log(arr)
             }
             arr[i].sessions.sort(_this.compare("EventWhen"));
         }
+        // console.log(a)
+        tempArray = tempArray.sort()
+        var removeEventArray = [tempArray[0]]
+        for (i = 0; i < tempArray.length; i++) {
+            if (tempArray[i] !== removeEventArray[removeEventArray.length - 1]) {
+                removeEventArray.push(tempArray[i])
+            }
+        }
+        // console.log(b)
+        for (i = removeEventArray.length - 1; i >= 0; i--) {
+            // console.log(b[i])
+            arr.splice(removeEventArray[i], 1)
+        }
+        // console.log(arr)
     },
     //时间格式
     timeFormat: function (arr) {
@@ -200,12 +208,14 @@ App({
         }
         // console.log(newArr.length);
     },
+
     hideQRbox: function (event, that) {
         that.setData({
             isShow: false,
             isBlur: false
         })
     },
+
     //适配不同屏幕大小的canvas
     setCanvasSize: function () {
         var size = {};
@@ -224,6 +234,7 @@ App({
     },
     createQrCode: function (url, canvasId, cavW, cavH, that) {
         //调用插件中的draw方法，绘制二维码图片
+        console.log(url)
         QR.api.draw(url, canvasId, cavW, cavH);
         setTimeout(() => { that.canvasToTempImage(); }, 500);
 
@@ -240,7 +251,7 @@ App({
                 });
             },
             fail: function (res) {
-                console.log(res);
+                // console.log(res);
             }
         });
     },
@@ -276,7 +287,6 @@ App({
         // console.log(this.data.isTelNull)
     },
     globalData: {
-        // wechatOpenId: 'oj-L2vy5aocCOwtfWY_EXOlONuxM',
-        arrayEventsResult: []
+
     }
 })

@@ -3,16 +3,17 @@
 <view id="main-container">
     <view class="marginBottom50 pageTitle">签到</view>
 
-
     <view id="formSignin" wx:if="{{isActionId}}">
-        <view class='formInfo col2 marginLeftRight50 marginBottom30'>
+        <view class="marginLeftRight50 eventTitle marginBottom30" wx:if="{{isUserInfo}}">未找到嘉宾的个人信息</view>
+        <view class='formInfo col2 marginLeftRight50 marginBottom30' wx:else>
             <view>姓名 : {{userInfo.ChineseName}} {{userInfo.EnglishName}}</view>
             <view>手机 : {{userInfo.CellPhone}}</view>
             <view>公司：{{userInfo.Company}}</view>
             <view>职位：{{userInfo.Title}}</view>
         </view>
         <view class='splitLine marginBottom30'></view>
-        <view class="marginLeftRight50 eventTitle marginBottom30">请勾选嘉宾确认签到的场次：</view>
+        <view class="marginLeftRight50 eventTitle marginBottom30" wx:if="{{isSessionInfo}}">未找到可签到的场次信息</view>
+        <view class="marginLeftRight50 eventTitle marginBottom30" wx:else>请勾选嘉宾确认签到的场次：</view>
         <radio-group bindchange="checkboxChange" class="marginLeftRight50">
             <label class="radio" wx:for='{{sessionInfo}}'>
                 <view>
@@ -29,12 +30,14 @@
             <input type="tel" name="inputTelephone" bindinput='getCellPhone' id="inputTelephone" value="" placeholder="请填写嘉宾的手机号码"></input>
         </view>
     </view>
-
 </view>
 
-<view class='buttonGroup blockRadius blockShadow' wx:if="{{isActionId}}" bindtap='signInConfirm'>
-    <view form-type='submit' class='paddingTopBottom25'>确认签到</view>
+<view class="buttonGroup blockRadius blockShadow {{isIPX?'isIPX':''}}" wx:if="{{isActionId}}">
+    <!-- <view bindtap='signInConfirm' class='button paddingTopBottom25'>确认签到</view> -->
+    <form bindsubmit='signInConfirm' style='width:100%'>
+        <button formType="submit" class='button formBotton'>确认签到</button>
+    </form>
 </view>
-<view class='buttonGroup blockRadius blockShadow' wx:else bindtap='userConfirm'>
-    <view form-type='submit' disabled='{{isCellNull}}' class='paddingTopBottom25'>身份验证</view>
+<view class="buttonGroup blockRadius blockShadow {{isIPX?'isIPX':''}}" wx:else>
+    <view bindtap='userConfirm' class='button paddingTopBottom25'>身份验证</view>
 </view>

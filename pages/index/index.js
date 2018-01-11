@@ -12,10 +12,12 @@ Page({
         interval: 5000,
         duration: 1000,
         arrNull: false,
-        showSignin: false
+        showSignin: false,
+        isIPX: app.globalData.isIPX ? true : false
     },
     //事件处理函数
     gotoPageList: function () {
+        // console.log(app.globalData.arrSessions)
         wx.navigateTo({
             url: '../list/list?category=signin'
         })
@@ -44,6 +46,7 @@ Page({
             url: '../user/user'
         })
     },
+
     gotoDetails: function (event) {
         // console.log(event.currentTarget.dataset);
         wx.navigateTo({
@@ -51,13 +54,13 @@ Page({
         })
     },
     onLoad: function () {
-        console.log(app);
+        // console.log(app);
         var that = this;
-
+        
         wx.getStorage({
             key: 'epStaffInfo',
             success: function (res) {
-                console.log(res.data);
+                // console.log(res.data);
                 that.setData({
                     showSignin: true
                 });
@@ -80,41 +83,37 @@ Page({
                         'content-type': 'application/json' // 默认值
                     },
                     success: function (res) {
+                        console.log(res);
                         wx.hideLoading();
                         // console.log(res.data.Data.EventSessionsNeedToJoin);
-                        console.log(res.data.Data)
-                        if (res.data.Data) {
+                        // console.log(res.data)
+                        if (!res.data.IsError && res.data.Data) {
+                            
                             app.globalData.arrSessions = res.data.Data;
-                            if (app.globalData.arrSessions) {
-                                console.log(app.globalData.arrSessions);
-                                
-                                var arr = app.globalData.arrSessions.EventSessionsNeedToJoin;
-                                arr.sort(app.compare("StartTime"))
-                                // console.log(arr)
-
-                                app.reCom(arr)
-                                //时间判断
-                                var arrayEvents = [];
-                                app.screenTime(arr, arrayEvents)
-                                if (arrayEvents.length == 0) {
-                                    that.setData({
-                                        arrNull: true
-                                    })
-                                }
-                                // console.log(arr[0].sessions[0].EventWhen.length)
-                                app.globalData.arrayEventsResult = app.globalData.arrSessions;
+                            //排序 重组
+                            var arr = res.data.Data.EventSessionsNeedToJoin;
+                            arr.sort(app.compare("StartTime"))
+                            app.reCom(arr)
+                            //时间判断
+                            var arrayEvents = [];
+                            app.screenTime(arr, arrayEvents)
+                            if (arrayEvents.length == 0) {
                                 that.setData({
-                                    arrayEvents: arrayEvents,
-                                    // arrayEvents: arr,
-                                });
-                                
+                                    arrNull: true
+                                })
                             }
-                        }else{
+                            // console.log(arr[0].sessions[0].EventWhen.length)
+                            that.setData({
+                                arrayEvents: arrayEvents,
+                                // arrayEvents: arr,
+                            });
+                        } else {
                             that.setData({
                                 arrNull: true
                             })
                         }
-                        
+                        // console.log(res.data.arrNull);
+
                     }
                 });
                 clearInterval(t);

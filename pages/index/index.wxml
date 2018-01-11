@@ -10,7 +10,7 @@
     </swiper> -->
 
     <view class='pageTitle' wx:if="{{!arrNull}}">待参加的活动</view>
-    <view class='pageTitle' wx:if="{{arrNull}}">暂无待参加的活动</view>
+    <view class='eventSummary textCenter marginTopBottom25' wx:if="{{arrNull}}">暂无待参加的活动</view>
     <view wx:for="{{arrayEvents}}" class="event-block-container blockShadow">
         <image src='http://epadmin.rfistudios.com.cn{{item.ListUrl}}' mode='widthFix' data-event-id="{{item.EventId}}" data-session-id="{{item.SessionId}}" bindtap="gotoDetails"></image>
         <view class="event-info-container" wx:for="{{item.sessions}}" wx:for-item="i" wx:key="i" data-event-id="{{item.EventId}}" data-session-id="{{i.sessionId}}" bindtap="gotoDetails">
@@ -20,7 +20,7 @@
     </view>
 
 </scroll-view>
-<view id='nav-bottom'>
+<view id='nav-bottom' class="{{isIPX?'bottom68':''}}">
     <view bindtap='gotoPageList'>
         <image src="/assets/images/index/all.png" mode="aspectFit"></image>
         <text>活动</text>
@@ -37,4 +37,6 @@
         <image src="/assets/images/index/account.png" mode="aspectFit"></image>
         <text>我的</text>
     </view>
+    
 </view>
+<view id='bottomIPX' wx:if="{{isIPX}}"></view>
