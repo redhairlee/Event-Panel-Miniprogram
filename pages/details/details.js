@@ -2,7 +2,9 @@
 var QQMapWX = require('../../assets/plugins/qqmap-wx-jssdk.min.js');
 var qqmapsdk;
 var QR = require("../../utils/qrcode.js");
-var app = getApp()
+var app = getApp();
+var Promisify = require('../../utils/util.js');
+var request = Promisify.wxPromisify(wx.request);//ajax请求
 
 Page({
     data: {
@@ -14,7 +16,8 @@ Page({
         imagePath: '',
         isShow: false,
         isBlur: false,
-        isIPX: app.globalData.isIPX ? true : false
+        isIPX: app.globalData.isIPX ? true : false,
+        language: app.globalData.language
     },
     gotoPageQR: function (event) {
         var that = this;
@@ -42,7 +45,7 @@ Page({
             key: 'epUserInfo',
             success: function (res) {
                 // console.log(res);
-                wx.request({
+                request({
                     url: 'https://epadmin.rfistudios.com.cn/api/WeChatEvent/GetSignInUserProfile',
                     method: 'POST',
                     data: {
@@ -51,21 +54,18 @@ Page({
                         UserId: res.data.userId,
                         JsonData: "string"
                     },
-                    success: function (res) {
-                        // console.log(res.data)
-                        if(!res.data.IsError){
-                            that.setData({
-                                SeatNumber: res.data.Data.Profile.SeatNumber,
-                                Gift: res.data.Data.Profile.Gift
-                            })
-                        }
-                        
+                }).then(res=>{
+                    if (!res.data.IsError) {
+                        that.setData({
+                            SeatNumber: res.data.Data.Profile.SeatNumber,
+                            Gift: res.data.Data.Profile.Gift
+                        })
                     }
-                });
+                })
                 // var t = setInterval(function(){
 
                 // })
-                wx.request({
+                request({
                     url: 'https://epadmin.rfistudios.com.cn/api/WeChatEvent/GetEventAction',
                     method: 'POST',
                     data: {
@@ -74,21 +74,19 @@ Page({
                         UserId: res.data.userId,
                         ActionType: 0
                     },
-                    success: function (res) {
-                        console.log(res)
-                        if (!res.data.IsError) {
-                            console.log(res.data.Data.ActionId)
-                            var size = that.setCanvasSize();//动态设置画布大小
-
-                            that.createQrCode(res.data.Data.ActionId.toString(), "mycanvas", size.w, size.h);
-                        }
-
+                }).then(res=>{
+                    console.log(1)
+                    console.log(res)
+                    if (!res.data.IsError) {
+                        console.log(res.data.Data.ActionId)
+                        var size = that.setCanvasSize();//动态设置画布大小
+                        that.createQrCode(res.data.Data.ActionId.toString(), "mycanvas", size.w, size.h);
                     }
-                });
+                })
             },
         })
 
-        wx.request({
+        request({
             url: 'https://epadmin.rfistudios.com.cn/api/WeChatEvent/GetEvent',
             data: {
                 eventId: options.eventId
@@ -96,44 +94,43 @@ Page({
             header: {
                 'content-type': 'application/json'
             },
-            success: function (result) {
-                console.log(result);
-                if (!result.data.IsError) {
-                    that.setData({
-                        eventName: result.data.Data.Name,
-                        eventDatetime: result.data.Data.EventWhen,
-                        eventVenue: result.data.Data.EventWhere,
-                        eventIntro: result.data.Data.Brief,
-                        eventImage: result.data.Data.ListUrl,
-                        eventId: options.eventId,
-                        sessionId: options.sessionId
-                    });
-                    // console.log(that.data)
-                    qqmapsdk.geocoder({
-                        address: result.data.Data.EventWhere,
-                        success: function (res) {
-                            //console.log(res.result.location);
-                            that.setData({
-                                longitude: res.result.location.lng,
+        }).then(result=>{
+            console.log(result);
+            if (!result.data.IsError) {
+                that.setData({
+                    eventName: result.data.Data.Name,
+                    eventDatetime: result.data.Data.EventWhen,
+                    eventVenue: result.data.Data.EventWhere,
+                    eventIntro: result.data.Data.Brief,
+                    eventImage: result.data.Data.ListUrl,
+                    eventId: options.eventId,
+                    sessionId: options.sessionId
+                });
+                // console.log(that.data)
+                qqmapsdk.geocoder({
+                    address: result.data.Data.EventWhere,
+                    success: function (res) {
+                        //console.log(res.result.location);
+                        that.setData({
+                            longitude: res.result.location.lng,
+                            latitude: res.result.location.lat,
+                            markers: [{
                                 latitude: res.result.location.lat,
-                                markers: [{
-                                    latitude: res.result.location.lat,
-                                    longitude: res.result.location.lng,
-                                    title: result.data.Data.EventWhere
-                                }]
-                            });
-                        },
-                        fail: function (res) {
-                            //console.log(res);
-                        },
-                        complete: function (res) {
-                            //console.log(res);
-                        }
-                    });
-                }
+                                longitude: res.result.location.lng,
+                                title: result.data.Data.EventWhere
+                            }]
+                        });
+                    },
+                    fail: function (res) {
+                        //console.log(res);
+                    },
+                    complete: function (res) {
+                        //console.log(res);
+                    }
+                });
             }
         })
-        console.log(that.data);
+        // console.log(that.data);
         if (options.showQRCode) {
             that.gotoPageQR();
         }

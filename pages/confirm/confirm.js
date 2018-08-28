@@ -1,5 +1,7 @@
 // pages/confirm/confirm.js
-var app = getApp()
+var app = getApp();
+var Promisify = require('../../utils/util.js');
+var request = Promisify.wxPromisify(wx.request);//ajax请求
 Page({
 
 	/**
@@ -13,7 +15,8 @@ Page({
         isShow: false,
         isBlur: false,
         nullSessions: false,
-        isIPX: app.globalData.isIPX ? true : false
+        isIPX: app.globalData.isIPX ? true : false,
+        language: app.globalData.language
     },
 
 	/**
@@ -32,20 +35,18 @@ Page({
         // console.log(that.data);
         
         //Event信息获取
-        wx.request({
+        request({
             url: 'https://epadmin.rfistudios.com.cn/api/WeChatEvent/GetEvent',
             data: {
                 eventId: options.eventId
             },
-            success: function (res) {
-                // console.log(res)
-                if (!res.data.IsError) {
-                    that.setData({
-                        eventId: options.eventId,
-                        arrayEventsInfo: res.data.Data,
-                        openId: app.globalData.wechatOpenId,
-                    });
-                }
+        }).then(res=>{
+            if (!res.data.IsError) {
+                that.setData({
+                    eventId: options.eventId,
+                    arrayEventsInfo: res.data.Data,
+                    openId: app.globalData.wechatOpenId,
+                });
             }
         })
         wx.getStorage({
@@ -56,52 +57,50 @@ Page({
                     userInfo: res.data.userInfo,
                     userId: res.data.userId
                 });
-                wx.request({
+                request({
                     url: 'https://epadmin.rfistudios.com.cn/api/WeChatEvent/GetSessionsByRSVP',
                     method: 'POST',
                     data: {
                         UserId: res.data.userId,
                         EventId: options.eventId
                     },
-                    success: function (res) {
-                        wx.hideLoading();
-                        // console.log(res.data.Data.length)
-                        if (!res.data.IsError) {
-                            // console.log(res)
-                            if(res.data.Data.length>0){
-                                var arr = res.data.Data;
-                                app.timeFormat(arr);
-                                wx.getStorage({
-                                    key: 'epUserConfirmedSessions',
-                                    success: function (res) {
-                                        for (var i = 0; i < arr.length; i++) {
-                                            var sessionId = arr[i].SessionId;
-                                            for (var j = 0; j < res.data.length; j++) {
-                                                if (sessionId == res.data[j]) {
-                                                    wx.redirectTo({
-                                                        url: '../details/details?eventId=' + options.eventId + '&sessionId=' + sessionId + '&showQRCode=true'
-                                                    });
-                                                }
+                }).then(res=>{
+                    wx.hideLoading();
+                    // console.log(res.data.Data.length)
+                    if (!res.data.IsError) {
+                        console.log(res)
+                        if (res.data.Data.length > 0) {
+                            var arr = res.data.Data;
+                            console.log(arr)
+                            app.timeFormat(arr);
+                            wx.getStorage({
+                                key: 'epUserConfirmedSessions',
+                                success: function (res) {
+                                    for (var i = 0; i < arr.length; i++) {
+                                        var sessionId = arr[i].SessionId;
+                                        for (var j = 0; j < res.data.length; j++) {
+                                            if (sessionId == res.data[j]) {
+                                                wx.redirectTo({
+                                                    url: '../details/details?eventId=' + options.eventId + '&sessionId=' + sessionId + '&showQRCode=true'
+                                                });
                                             }
                                         }
-                                    },
-                                    fail: function () { }
-                                })
+                                    }
+                                },
+                                fail: function () { }
+                            })
 
-                                that.setData({
-                                    sessionInfo: arr
-                                    // startTime: startTime
-                                });
-                            }else{
-                                that.setData({
-                                    nullSessions: true
-                                });
-                            }
-                            
+                            that.setData({
+                                sessionInfo: arr
+                                // startTime: startTime
+                            });
+                        } else {
+                            that.setData({
+                                nullSessions: true
+                            });
                         }
 
                     }
-
                 })
             },
         })
@@ -127,51 +126,92 @@ Page({
     sighupTap: function () {
         // console.log(this);
         var that = this;
-        wx.request({
+        request({
             url: 'https://epadmin.rfistudios.com.cn/api/WeChatEvent/GetUserProfileByCellPhone',
             data: {
-                cellPhone: this.data.telNum
+                cellPhone: that.data.telNum
             },
-            success: function (res) {
-                // console.log(res)
-                if (!res.data.IsError) {
-                    that.setData({
-                        userInfo: res.data.Data.Profile,
-                        userId: res.data.Data.UserId
-                    });
-                    wx.setStorage({
-                        key: 'epUserInfo',
-                        data: {
-                            userInfo: that.data.userInfo,
-                            userId: that.data.userId
-                        },
-                    });
-                    wx.request({
-                        url: 'https://epadmin.rfistudios.com.cn/api/WeChatEvent/GetSessionsByRSVP',
-                        method: 'POST',
-                        data: {
-                            UserId: that.data.userId,
-                            EventId: that.data.options.eventId
-                        },
-                        success: function (res) {
-                            // console.log(res.data.Data)
-                            if (!res.data.IsError) {
-                                if (res.data.Data.length > 0) {
-                                    var arr = res.data.Data;
-                                    app.timeFormat(arr);
-                                    that.setData({
-                                        sessionInfo: arr,
-                                        isConfirm: 0
-                                    });
-                                }else{
-                                    that.setData({
-                                        nullSessions: true
-                                    });
-                                }
-                            }
+        }).then(res=>{
+            if (!res.data.IsError) {
+                that.setData({
+                    userInfo: res.data.Data.Profile,
+                    userId: res.data.Data.UserId
+                });
+                wx.setStorage({
+                    key: 'epUserInfo',
+                    data: {
+                        userInfo: that.data.userInfo,
+                        userId: that.data.userId
+                    },
+                });
+                request({
+                    url: 'https://epadmin.rfistudios.com.cn/api/WeChatEvent/GetSessionsByRSVP',
+                    method: 'POST',
+                    data: {
+                        UserId: that.data.userId,
+                        EventId: that.data.options.eventId
+                    },
+                }).then(res=>{
+                    if (!res.data.IsError) {
+                        if (res.data.Data.length > 0) {
+                            var arr = res.data.Data;
+                            app.timeFormat(arr);
+                            that.setData({
+                                sessionInfo: arr,
+                                isConfirm: 0
+                            });
+                        } else {
+                            that.setData({
+                                nullSessions: true
+                            });
                         }
-                    })
-                }
+                    }
+                })
+            }
+        })
+
+        request({
+            url: 'https://epadmin.rfistudios.com.cn/api/WeChatEvent/GetUserProfileByCellPhone',
+            data: {
+                cellPhone: that.data.telNum
+            },
+        }).then(res=>{
+            if (!res.data.IsError) {
+                that.setData({
+                    userInfo: res.data.Data.Profile,
+                    userId: res.data.Data.UserId
+                });
+                wx.setStorage({
+                    key: 'epUserInfo',
+                    data: {
+                        userInfo: that.data.userInfo,
+                        userId: that.data.userId
+                    },
+                });
+                request({
+                    url: 'https://epadmin.rfistudios.com.cn/api/WeChatEvent/GetSessionsByRSVP',
+                    method: 'POST',
+                    data: {
+                        UserId: that.data.userId,
+                        EventId: that.data.options.eventId
+                    },
+                    
+                }).then(res=>{
+                    if (!res.data.IsError) {
+                        if (res.data.Data.length > 0) {
+                            var arr = res.data.Data;
+                            app.timeFormat(arr);
+                            that.setData({
+                                sessionInfo: arr,
+                                isConfirm: 0
+                            });
+                        } else {
+                            that.setData({
+                                nullSessions: true
+                            });
+                        }
+                    }
+                })
             }
         })
 
@@ -188,7 +228,7 @@ Page({
         
         // console.log(that.data.sessionInfo)
         if (that.data.isConfirm == 1) {
-            wx.request({
+            request({
                 url: 'https://epadmin.rfistudios.com.cn/api/WeChatEvent/SignUp',
                 method: 'POST',
                 data: {
@@ -197,23 +237,23 @@ Page({
                     EventId: that.data.eventId,
                     SessionIds: that.data.sessionIds
                 },
-                success: function (res) {
-                    console.log(res.data.IsError)
-                    if (!res.data.IsError) {
-                        wx.setStorage({
-                            key: 'epUserConfirmedSessions',
-                            data: that.data.sessionIds,
-                        })
-                        wx.redirectTo({
-                            url: '../details/details?eventId=' + that.data.eventId + '&sessionId=' + that.data.sessionIds + '&showQRCode=true'
-                        });
-                    }
+            }).then(res=>{
+                console.log(res.data.IsError)
+                if (!res.data.IsError) {
+                    wx.setStorage({
+                        key: 'epUserConfirmedSessions',
+                        data: that.data.sessionIds,
+                    })
+                    wx.redirectTo({
+                        url: '../details/details?eventId=' + that.data.eventId + '&sessionId=' + that.data.sessionIds + '&showQRCode=true'
+                    });
                 }
-            });
+            })
         }else{
             wx.showModal({
-                title: '请选择您要报名的场次',
+                title: that.data.language.modal_confirm_1,
                 content: '',
+                confirmText: that.data.language.modal_confirmText,
                 showCancel: false,
                 success: function (res) {
                     if (res.confirm) {

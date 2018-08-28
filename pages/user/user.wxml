@@ -5,24 +5,25 @@
             <view id="user-header-info-head" class='blockShadow'>
                 <image src="{{userAvatar}}" mode="aspectFit"></image>
             </view>
-            <text id='user-header-info-name' class='pageTitle'>{{userNickname}}</text>
+            <text id='user-header-info-name' class='pageTitle'>{{epUserName?epUserName:userNickname}}</text>
             <text>{{userPhone}}</text>
             <text class="eventSummary" wx:if="{{isShow}}">{{userCompany}} | {{userTitle}}</text>
+            <text class="eventSummary" style='color:#3131d2' bindtap="gotoSetUp">{{language.user_1}}</text>
         </view>
     </view>
     <view class='splitLine'></view>
     <view id="user-info-container">
         <view bindtap="gotoListSignin" class="info-block-container">
             <span>{{NeedToJoin}}</span>
-            <span>待参加</span>
+            <span>{{language.user_2}}</span>
         </view>
         <view bindtap="gotoListRate" class="info-block-container">
             <span>{{NeedToFeedBack}}</span>
-            <span>待评价</span>
+            <span>{{language.user_3}}</span>
         </view>
         <view bindtap="gotoListAll" class="info-block-container">
             <span>{{HaveJoined}}</span>
-            <span>已参加</span>
+            <span>{{language.user_4}}</span>
         </view>
     </view>
 </view>

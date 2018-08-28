@@ -8,7 +8,7 @@
 		"newFeature": true
 	},
 	"compileType": "miniprogram",
-	"libVersion": "1.7.4",
+	"libVersion": "2.2.4",
 	"appid": "wx1d79625d92c04591",
 	"projectname": "Event%20Panel",
 	"condition": {
@@ -20,12 +20,16 @@
 			"current": -1,
 			"list": []
 		},
+		"plugin": {
+			"current": -1,
+			"list": []
+		},
 		"game": {
 			"current": -1,
 			"list": []
 		},
 		"miniprogram": {
-			"current": -1,
+			"current": 3,
 			"list": [
 				{
 					"id": 0,
@@ -37,19 +41,31 @@
 					"id": 1,
 					"name": "测试在线确认",
 					"pathName": "pages/confirm/confirm",
-					"query": "eventId=0beacbf9-341e-48da-912d-d3baa95e1513"
+					"query": "eventId=17b6040e-5887-4cea-a0e7-e023a035ef23"
 				},
 				{
 					"id": 2,
 					"name": "测试现场签到",
 					"pathName": "pages/signin/signin",
-					"query": "actionId=3934"
+					"query": "actionId=19879"
+				},
+				{
+					"id": 3,
+					"name": "测试工作人员绑定",
+					"pathName": "pages/employee/employee",
+					"query": "eventId=550c3ab8-ffd6-4d2c-ac5b-4adebdf7ecdd&sessionId=a2cbde53-0b12-4f72-9800-2bb1b70e0bef"
 				},
 				{
 					"id": 4,
-					"name": "测试工作人员绑定",
-					"pathName": "pages/employee/employee",
-					"query": "eventId=0beacbf9-341e-48da-912d-d3baa95e1513&sessionId=286e0cd2-e2dd-477b-a75e-f25ad867aded"
+					"name": "测试公开报名",
+					"pathName": "pages/signup/signup",
+					"query": "eventId=de195edb-61da-4adf-8b84-5b668a876b48"
+				},
+				{
+					"id": 5,
+					"name": "测试修改个人信息",
+					"pathName": "pages/setup/setup",
+					"query": ""
 				}
 			]
 		}

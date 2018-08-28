@@ -14,7 +14,7 @@
     <view class="eventSummary textCenter marginBottom10 marginLeftRight50">
         {{eventIntro}}
     </view>
-    <view class="eventSummary textCenter paddingBottom130">
+    <view class='eventSummary textCenter {{isIPX?"paddingBottom198":"paddingBottom130"}}'>
         <view>{{SeatNumber}}</view>
         <view>{{Gift}}</view>
     </view>
@@ -24,9 +24,9 @@
 </scroll-view>
 
 <view class="buttonGroup col2 blockRadius blockShadow {{isIPX?'isIPX':''}}">
-    <view class='button paddingTopBottom25' bindtap='gotoDestination'>地图导航</view>
+    <view class='button paddingTopBottom25' bindtap='gotoDestination'>{{language.details_1}}</view>
     <view class="button paddingTopBottom25" data-event-id="{{eventId}}" data-session-id="{{sessionId}}" bindtap='gotoPageQR'>
-        现场签到
+        {{language.details_2}}
     </view>
 </view>
 
@@ -38,7 +38,7 @@
             </view>
         </view>
         <view id="qr-intro-container" class='marginTopBottom25'>
-            <text class="text-center">请于活动当天，将此二维码展示给现场负责签到的工作人员进行扫码，以完成签到。</text>
+            <text class="text-center">{{language.details_3}}</text>
         </view>
     </view>
 </view>

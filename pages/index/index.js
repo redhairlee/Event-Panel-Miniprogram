@@ -1,6 +1,8 @@
 //index.js
 //获取应用实例
 var app = getApp();
+var Promisify = require('../../utils/util.js');
+var request = Promisify.wxPromisify(wx.request);//ajax请求
 Page({
     data: {
         imgUrls: [
@@ -13,7 +15,8 @@ Page({
         duration: 1000,
         arrNull: false,
         showSignin: false,
-        isIPX: app.globalData.isIPX ? true : false
+        isIPX: app.globalData.isIPX ? true : false,
+        language: app.globalData.language
     },
     //事件处理函数
     gotoPageList: function () {
@@ -53,10 +56,11 @@ Page({
             url: '../details/details?eventId=' + event.currentTarget.dataset.eventId + '&sessionId=' + event.currentTarget.dataset.sessionId
         })
     },
+
     onLoad: function () {
         // console.log(app);
+        // console.log(app.globalData);
         var that = this;
-        
         wx.getStorage({
             key: 'epStaffInfo',
             success: function (res) {
@@ -70,11 +74,11 @@ Page({
         wx.showLoading({
             title: '加载中',
         })
-
-
+        // console.log("index+"+app.globalData.wechatOpenId);
         var t = setInterval(function () {
             if (app.globalData.wechatOpenId) {
-                wx.request({
+                clearInterval(t)
+                request({
                     url: 'https://epadmin.rfistudios.com.cn/api/WeChatEvent/GetMyEventSessions',
                     data: {
                         weChatOpenId: app.globalData.wechatOpenId
@@ -82,43 +86,41 @@ Page({
                     header: {
                         'content-type': 'application/json' // 默认值
                     },
-                    success: function (res) {
-                        console.log(res);
-                        wx.hideLoading();
-                        // console.log(res.data.Data.EventSessionsNeedToJoin);
-                        // console.log(res.data)
-                        if (!res.data.IsError && res.data.Data) {
-                            
-                            app.globalData.arrSessions = res.data.Data;
-                            //排序 重组
-                            var arr = res.data.Data.EventSessionsNeedToJoin;
-                            arr.sort(app.compare("StartTime"))
-                            app.reCom(arr)
-                            //时间判断
-                            var arrayEvents = [];
-                            app.screenTime(arr, arrayEvents)
-                            if (arrayEvents.length == 0) {
-                                that.setData({
-                                    arrNull: true
-                                })
-                            }
-                            // console.log(arr[0].sessions[0].EventWhen.length)
-                            that.setData({
-                                arrayEvents: arrayEvents,
-                                // arrayEvents: arr,
-                            });
-                        } else {
+                }).then(res => {
+                    // console.log(res);
+                    wx.hideLoading();
+                    // console.log(res.data.Data.EventSessionsNeedToJoin);
+                    // console.log(res.data)
+                    if (!res.data.IsError && res.data.Data) {
+
+                        app.globalData.arrSessions = res.data.Data;
+                        //排序 重组
+                        var arr = res.data.Data.EventSessionsNeedToJoin;
+                        arr.sort(app.compare("StartTime"))
+                        // console.log(arr)
+                        app.reCom(arr)
+                        // console.log(arr)
+                        //场次状态判断
+                        var arrayEvents = [];
+                        app.screenTime(arr, arrayEvents)
+                        // console.log(arrayEvents)
+                        if (arrayEvents.length == 0) {
                             that.setData({
                                 arrNull: true
                             })
                         }
-                        // console.log(res.data.arrNull);
-
+                        that.setData({
+                            arrayEvents: arrayEvents,
+                            // arrayEvents: arr,
+                        });
+                    } else {
+                        that.setData({
+                            arrNull: true
+                        })
                     }
-                });
-                clearInterval(t);
+                })
             }
-
-        }, 500);
+        }, 50)
+        
     }
 })

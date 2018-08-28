@@ -1,15 +1,15 @@
 <!--pages/employee/employee.wxml-->
 <view id="main-container">
-    <view class="marginBottom50 pageTitle">工作人员绑定</view>
+    <view class="marginBottom50 pageTitle">{{language.employee_1}}</view>
     <view class="formInput marginLeftRight50 marginBottom30">
-        <label>姓名</label>
-        <input type="text" name="inputName" id="inputName" value="" placeholder="请填写您的真实姓名" bindinput='inputName'></input>
+        <label>{{language.name}}</label>
+        <input type="text" name="inputName" id="inputName" value="" placeholder="{{language.employee_3}}" bindinput='inputName'></input>
     </view>
     <view class="formInput marginLeftRight50 marginBottom50">
-        <label>手机</label>
-        <input type="tel" name="inputTelephone" bindinput='inputValue' id="inputTelephone" value="" placeholder="请填写您的手机号码"></input>
+        <label>{{language.cellphone}}</label>
+        <input type="tel" name="inputTelephone" bindinput='inputValue' id="inputTelephone" value="" placeholder="{{language.employee_5}}"></input>
     </view>
 </view>
 <view class="buttonGroup blockRadius blockShadow {{isIPX?'isIPX':''}}">
-    <view bindtap='setStuff' class='button paddingTopBottom25'>确认绑定</view>
+    <view bindtap='setStuff' class='button paddingTopBottom25'>{{language.employee_6}}</view>
 </view>

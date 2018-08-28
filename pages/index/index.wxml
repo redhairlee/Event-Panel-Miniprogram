@@ -8,9 +8,8 @@
             </swiper-item>
         </block>
     </swiper> -->
-
-    <view class='pageTitle' wx:if="{{!arrNull}}">待参加的活动</view>
-    <view class='eventSummary textCenter marginTopBottom25' wx:if="{{arrNull}}">暂无待参加的活动</view>
+    <view class='pageTitle' wx:if="{{!arrNull}}">{{language.index_1}}</view>
+    <view class='eventSummary textCenter marginTopBottom25' wx:if="{{arrNull}}">{{language.index_2}}</view>
     <view wx:for="{{arrayEvents}}" class="event-block-container blockShadow">
         <image src='http://epadmin.rfistudios.com.cn{{item.ListUrl}}' mode='widthFix' data-event-id="{{item.EventId}}" data-session-id="{{item.SessionId}}" bindtap="gotoDetails"></image>
         <view class="event-info-container" wx:for="{{item.sessions}}" wx:for-item="i" wx:key="i" data-event-id="{{item.EventId}}" data-session-id="{{i.sessionId}}" bindtap="gotoDetails">
@@ -23,20 +22,19 @@
 <view id='nav-bottom' class="{{isIPX?'bottom68':''}}">
     <view bindtap='gotoPageList'>
         <image src="/assets/images/index/all.png" mode="aspectFit"></image>
-        <text>活动</text>
+        <text>{{language.index_3}}</text>
     </view>
     <view bindtap='gotoScanCode' wx:if="{{showSignin}}">
         <image src="/assets/images/index/scanning.png" mode="aspectFit"></image>
-        <text>签到</text>
+        <text>{{language.signin}}</text>
     </view>
     <view bindtap='gotoPageSignin' wx:if="{{showSignin}}">
         <image src="/assets/images/index/template-default.png" mode="aspectFit"></image>
-        <text>手工</text>
+        <text>{{language.index_5}}</text>
     </view>
     <view bindtap='gotoPageUser'>
         <image src="/assets/images/index/account.png" mode="aspectFit"></image>
-        <text>我的</text>
+        <text>{{language.index_6}}</text>
     </view>
     
 </view>
-<view id='bottomIPX' wx:if="{{isIPX}}"></view>

@@ -8,18 +8,18 @@
     </view>
 
     <view class="marginLeftRight50" wx:if="{{userId}}">
-        <view class='eventTitle marginBottom30'>请确认您的个人信息：</view>
+        <view class='eventTitle marginBottom30'>{{language.confirm_1}}</view>
         <view class='formInfo col2 marginBottom30'>
             <view>
-                姓名 : {{userInfo.ChineseName}} {{userInfo.EnglishName}}
+                {{language.name}} : {{userInfo.ChineseName}} {{userInfo.EnglishName}}
             </view>
             <view>
-                手机 : {{userInfo.CellPhone}}
+                {{language.cellphone}} : {{userInfo.CellPhone}}
             </view>
         </view>
         <view class='splitLine marginBottom30'></view>
-        <view class='eventTitle marginBottom30' wx:if="{{nullSessions}}">未找到可参加的场次</view>
-        <view class='eventTitle marginBottom30' wx:if="{{!nullSessions}}">请选择确认参加的场次：</view>
+        <view class='eventTitle marginBottom30' wx:if="{{nullSessions}}">{{language.confirm_4}}</view>
+        <view class='eventTitle marginBottom30' wx:if="{{!nullSessions}}">{{language.confirm_5}}</view>
         <radio-group bindchange="checkboxChange">
             <label class="checkbox" wx:for="{{sessionInfo}}">
                 <view>
@@ -32,20 +32,20 @@
     </view>
 
     <view class="marginLeftRight50" wx:else>
-        <view class='eventTitle marginBottom30'>请输入您的电话号码：</view>
+        <view class='eventTitle marginBottom30'>{{language.confirm_6}}</view>
         <view class="formInput marginBottom30">
-            <label>手机</label>
-            <input name="inputCheckTelephone" id="inputCheckTelephone" placeholder="请填写您的常用手机号码" bindinput='inputValue' placeholder-class='phColor'></input>
+            <label>{{language.confirm_3}}</label>
+            <input name="inputCheckTelephone" id="inputCheckTelephone" placeholder="{{language.confirm_7}}" bindinput='inputValue' placeholder-class='phColor'></input>
         </view>
     </view>
 
 
-    <view class='eventSummary marginLeftRight50 marginBottom50'>如遇问题，请联系活动主办方工作人员：{{arrayEventsInfo.OrganizerContact}}</view>
+    <view class='eventSummary marginLeftRight50 {{isIPX?"paddingBottom198":"paddingBottom130"}}'>{{language.confirm_8}}：{{arrayEventsInfo.OrganizerContact}}</view>
 
     <view class='buttonGroup blockRadius blockShadow {{isIPX?"isIPX":""}}' wx:if="{{userId}}">
-        <view bindtap='confirmInfo' class='button paddingTopBottom25'>确认参加</view>
+        <view bindtap='confirmInfo' class='button paddingTopBottom25'>{{language.confirm_9}}</view>
     </view>
     <view class='buttonGroup blockRadius blockShadow' wx:else>
-        <view bindtap='sighupTap' class='button paddingTopBottom25'>身份验证</view>
+        <view bindtap='sighupTap' class='button paddingTopBottom25'>{{language.confirm_10}}</view>
     </view>
 </scroll-view>

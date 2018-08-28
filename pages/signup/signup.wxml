@@ -1,2 +1,36 @@
 <!--pages/signup/signup.wxml-->
-<text>pages/signup/signup.wxml</text>
+
+<scroll-view id="main-container" scroll-y="true">
+    <view class="marginBottom20 pageTitle">{{arrayEventsInfo.Name}}</view>
+
+    <view class="event-block-container blockShadow">
+        <image src="https://epadmin.rfistudios.com.cn{{arrayEventsInfo.ListUrl}}" mode="widthFix"></image>
+    </view>
+    <view class="marginLeftRight50">
+        <view class='eventTitle marginBottom30'>{{language.signup_1}}</view>
+        <view class="formInput marginBottom30">
+            <label>{{language.cellphone}}</label>
+            <input name="inputCheckTelephone" id="" placeholder="{{language.signup_3}}" bindinput='inputTelPhone' placeholder-class='phColor' value='{{CellPhone}}'></input>
+        </view>
+        <view class="formInput marginBottom30">
+            <label>{{language.name}}</label>
+            <input name="inputCheckChineseName" id="" placeholder="{{language.signup_5}}" bindinput='inputName' placeholder-class='phColor' value='{{ChineseName}}'></input>
+        </view>
+        <view class="formInput marginBottom30">
+            <label>{{language.email}}</label>
+            <input name="inputCheckEmail" id="" placeholder="{{language.signup_7}}" bindinput='inputEmail' placeholder-class='phColor' value='{{Email}}'></input>
+        </view>
+        <radio-group bindchange="checkboxChange">
+            <label class="checkbox" wx:for="{{sessionInfo}}">
+                <view data-index="{{index}}" bindtap='checkedIndex'>
+                    <radio value="{{item.SessionId}}" />{{item.Name}} ({{item.StartTime}})
+                </view>
+            </label>
+        </radio-group>
+        <view class='splitLine marginLeftRight50" marginBottom30'></view>
+    </view>
+    <view class='eventSummary marginLeftRight50 {{isIPX?"paddingBottom198":"paddingBottom130"}}'>{{language.signup_8}} : {{arrayEventsInfo.OrganizerContact}}</view>
+</scroll-view>
+<view class='buttonGroup blockRadius blockShadow {{isIPX?"isIPX":""}}'>
+    <view bindtap='signUp' class='button paddingTopBottom25'>{{language.signup_9}}</view>
+</view>

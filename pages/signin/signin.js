@@ -1,5 +1,7 @@
 // pages/signin/signin.js
 var app = getApp();
+var Promisify = require('../../utils/util.js');
+var request = Promisify.wxPromisify(wx.request);//ajax请求
 Page({
 
 	/**
@@ -9,9 +11,10 @@ Page({
 		isActionId: '',
 		isCellNull: 0,
 		isConfirm: 0,
-        isIPX: app.globalData.isIPX ? true : false,
-        isUserInfo:false,
-        isSessionInfo: false
+		isIPX: app.globalData.isIPX ? true : false,
+		isUserInfo: false,
+		isSessionInfo: false,
+		language: app.globalData.language
 	},
 
 	/**
@@ -32,48 +35,85 @@ Page({
 				ActionIds: options.actionId,
 				isActionId: true
 			});
-			var t = setInterval(function () {
-				if (app.globalData.wechatOpenId) {
-					wx.request({
-						url: 'https://epadmin.rfistudios.com.cn/api/WeChatEvent/GetUserSessionByQRCode',
-						method: 'POST',
-						data: {
-							StaffWeChatOpenId: app.globalData.wechatOpenId,
-							ActionIds: options.actionId
-						},
-						success: function (res) {
-							console.log(res.data)
-                            if(!res.data.IsError){
-                                if(res.data.Data){
-                                    var res = res.data.Data
-                                    that.setData({
-                                        UserId: res.UserProfile.UserId,
-                                        userInfo: res.UserProfile.Profile
-                                    });
-                                    if (res.Sessions) {
-                                        var arr = res.Sessions;
-                                        app.timeFormat(arr);
-                                        that.setData({
-                                            sessionInfo: arr,
-                                        });
-                                    }else{
-                                        that.setData({
-                                            isSessionInfo: true
-                                        })
-                                    }
-                                }else{
-                                    that.setData({
-                                        isUserInfo:true,
-                                        isSessionInfo: true
-                                    })
-                                }
-                                
-                            }
+			request({
+				url: 'https://epadmin.rfistudios.com.cn/api/WeChatEvent/GetUserSessionByQRCode',
+				method: 'POST',
+				data: {
+					StaffWeChatOpenId: app.globalData.wechatOpenId,
+					ActionIds: options.actionId
+				},
+			}).then(res => {
+				console.log(res.data)
+				if (!res.data.IsError) {
+					if (res.data.Data) {
+						var res = res.data.Data;
+
+						that.setData({
+							UserId: res.UserProfile.UserId,
+							userInfo: res.UserProfile.Profile
+						});
+						if (!res.Sessions.length == 0) {
+							var arr = res.Sessions;
+							app.timeFormat(arr);
+							for (var i = 0; i < arr.length; i++) {
+								var index = i;
+
+								request({
+									url: 'https://epadmin.rfistudios.com.cn/api/WeChatEvent/GetSignInUserProfile',
+									method: 'POST',
+									data: {
+										EventId: arr[i].EventId,
+										SessionId: arr[i].SessionId,
+										UserId: res.UserProfile.UserId,
+										JsonData: ''
+									},
+								}).then(res => {
+									// console.log(res);
+									if (res.data.Data.Profile) {
+										var tempUserInfoComments = res.data.Data.Profile.Comments;
+										var arrayComments = res.data.Data.Profile.Comments.split('|');
+										arr[index].userInfoComments = '时间：' + arrayComments[5] + ' ' + arrayComments[4] + ' | 人数：' + arrayComments[6];
+									};
+									that.setData({
+										sessionInfo: arr,
+									});
+								});
+
+								request({
+									url: 'https://epadmin.rfistudios.com.cn/api/WeChatEvent/GetEventAction',
+									method: 'POST',
+									data: {
+										EventId: arr[i].EventId,
+										SessionId: arr[i].SessionId,
+										UserId: res.UserProfile.UserId,
+										ActionType: 1
+									},
+								}).then(res => {
+									// console.log(res);
+									if (res.data.Data) {
+										arr[index].Signed = true;
+									};
+									that.setData({
+										sessionInfo: arr,
+									});
+								});
+								console.log(arr);
+								// console.log(that.data.sessionInfo);                                
+							}
+						} else {
+							that.setData({
+								isSessionInfo: true
+							})
 						}
-					});
-					clearInterval(t);
+					} else {
+						that.setData({
+							isUserInfo: true,
+							isSessionInfo: true
+						})
+					}
+
 				}
-			}, 500);
+			})
 
 		}
 
@@ -94,84 +134,139 @@ Page({
 	//身份验证
 	userConfirm: function () {
 		var that = this
-        if (that.data.isCellNull == 1){
-            wx.request({
-                url: 'https://epadmin.rfistudios.com.cn/api/WeChatEvent/GetUserSessionByManual',
-                method: 'POST',
-                data: {
-                    StaffWeChatOpenId: app.globalData.wechatOpenId,
-                    UserCellPhone: this.data.cellPhone
-                },
-                success: function (res) {
-                    that.setData({
-                        isActionId: true
-                    })
-                    console.log(res.data.Data)
-                    var res = res.data.Data
-                    var arr = res.Sessions;
-                    app.timeFormat(arr);
-                    console.log(arr)
-                    that.setData({
-                        sessionInfo: arr,
-                        UserId: res.UserProfile.UserId,
-                        userInfo: res.UserProfile.Profile
-                    });
-                    // console.log(that.options)
-                }
-            })
-        }
-		
+		if (that.data.isCellNull == 1) {
+			request({
+				url: 'https://epadmin.rfistudios.com.cn/api/WeChatEvent/GetUserSessionByManual',
+				method: 'POST',
+				data: {
+					StaffWeChatOpenId: app.globalData.wechatOpenId,
+					UserCellPhone: this.data.cellPhone
+				},
+			}).then(res => {
+				that.setData({
+					isActionId: true
+				})
+				console.log(res.data.Data)
+				var res = res.data.Data
+				var arr = res.Sessions;
+				app.timeFormat(arr);
+				console.log(arr);
+				if (!res.Sessions.length == 0) {
+					var arr = res.Sessions;
+					app.timeFormat(arr);
+					for (var i = 0; i < arr.length; i++) {
+						var index = i;
+
+						request({
+							url: 'https://epadmin.rfistudios.com.cn/api/WeChatEvent/GetSignInUserProfile',
+							method: 'POST',
+							data: {
+								EventId: arr[i].EventId,
+								SessionId: arr[i].SessionId,
+								UserId: res.UserProfile.UserId,
+								JsonData: ''
+							},
+						}).then(res => {
+							// console.log(res);
+							if (res.data.Data.Profile) {
+								var tempUserInfoComments = res.data.Data.Profile.Comments;
+								var arrayComments = res.data.Data.Profile.Comments.split('|');
+								arr[index].userInfoComments = '时间：' + arrayComments[5] + ' ' + arrayComments[4] + ' | 人数：' + arrayComments[6];
+							};
+							that.setData({
+								sessionInfo: arr,
+							});
+						});
+
+						request({
+							url: 'https://epadmin.rfistudios.com.cn/api/WeChatEvent/GetEventAction',
+							method: 'POST',
+							data: {
+								EventId: arr[i].EventId,
+								SessionId: arr[i].SessionId,
+								UserId: res.UserProfile.UserId,
+								ActionType: 1
+							},
+						}).then(res => {
+							// console.log(res);
+							if (res.data.Data) {
+								arr[index].Signed = true;
+							};
+							that.setData({
+								sessionInfo: arr,
+							});
+						});
+						console.log(arr);
+						// console.log(that.data.sessionInfo);                                
+					}
+				} else {
+					that.setData({
+						isSessionInfo: true
+					})
+				}
+				that.setData({
+					sessionInfo: arr,
+					UserId: res.UserProfile.UserId,
+					userInfo: res.UserProfile.Profile
+				});
+			})
+		}
+
 	},
 	//确认签到
 	signInConfirm: function () {
 		var that = this;
-        if (that.data.isConfirm == 1){
-            console.log(that.data)
-            wx.request({
-                url: 'https://epadmin.rfistudios.com.cn/api/WeChatEvent/SignIn',
-                method: 'POST',
-                data: {
-                    UserId: that.data.UserId,
-                    EventId: that.data.sessionInfo[0].EventId,
-                    SessionId: that.data.sessionIds,
-                    JsonData: "string"
-                },
-                success: function (res) {
-                    if (!res.IsError) {
-                        wx.showModal({
-                            title: '签到成功',
-                            content: '点击确定返回首页',
-                            showCancel: false,
-                            success: function (res) {
-                                if (res.confirm) {
-                                    // console.log(res);
-                                    wx.redirectTo({
-                                        url: '../index/index',
-                                    })
-                                } else if (res.cancel) {
+		if (that.data.isConfirm == 1) {
+			console.log(that.data)
+			request({
+				url: 'https://epadmin.rfistudios.com.cn/api/WeChatEvent/SignIn',
+				method: 'POST',
+				data: {
+					UserId: that.data.UserId,
+					EventId: that.data.sessionInfo[0].EventId,
+					SessionId: that.data.sessionIds,
+					JsonData: "string"
+				},
+			}).then(res => {
+				if (!res.IsError) {
+					wx.showModal({
+						title: that.data.language.modal_signin_1,
+						content: that.data.language.modal_signin_2,
+						confirmText: that.data.language.modal_confirmText,
+						showCancel: false,
+						success: function (res) {
+							if (res.confirm) {
+								// console.log(res);
+								// wx.redirectTo({
+								//     url: '../index/index',
+								// })
+								wx.navigateBack({
+									delta: 1
+								})
+							} else if (res.cancel) {
 
-                                }
-                            }
-                        });
-                    }
-                }
-            })
-        }else{
-            wx.showModal({
-                title: '请选择签到的场次',
-                content: '',
-                showCancel: false,
-                success: function (res) {
-                    if (res.confirm) {
+							}
+						}
+					});
+				}
+			})
+		} else {
+			wx.showModal({
+				title: that.data.language.modal_signin_3,
+				content: '',
+				confirmText: that.data.language.modal_confirmText,
+				showCancel: false,
+				success: function (res) {
+					if (res.confirm) {
 
 
-                    } else if (res.cancel) {
+					} else if (res.cancel) {
 
-                    }
-                }
-            });
-        }
-		
+					}
+				}
+			});
+		}
+
 	},
 	checkboxChange: function (e) {
 		this.setData({

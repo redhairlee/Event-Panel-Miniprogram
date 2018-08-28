@@ -11,7 +11,8 @@
     "pages/rate/rate",
 	"pages/user/user",
     "pages/logs/logs",
-    "pages/employee/employee"
+    "pages/employee/employee",
+    "pages/setup/setup"
   ],
   "window": {
     "backgroundTextStyle": "light",

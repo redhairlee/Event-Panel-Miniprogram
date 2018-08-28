@@ -1,33 +1,35 @@
 <!--pages/confirm/confirm.wxml-->
 
 <view id="main-container">
-    <view class="marginBottom50 pageTitle">签到</view>
+    <view class="marginBottom50 pageTitle">{{language.signin}}</view>
 
     <view id="formSignin" wx:if="{{isActionId}}">
-        <view class="marginLeftRight50 eventTitle marginBottom30" wx:if="{{isUserInfo}}">未找到嘉宾的个人信息</view>
+        <view class="marginLeftRight50 eventTitle marginBottom30" wx:if="{{isUserInfo}}">{{language.signin_2}}</view>
         <view class='formInfo col2 marginLeftRight50 marginBottom30' wx:else>
-            <view>姓名 : {{userInfo.ChineseName}} {{userInfo.EnglishName}}</view>
-            <view>手机 : {{userInfo.CellPhone}}</view>
-            <view>公司：{{userInfo.Company}}</view>
-            <view>职位：{{userInfo.Title}}</view>
+            <view>{{language.name}} : {{userInfo.ChineseName}} {{userInfo.EnglishName}}</view>
+            <view>{{language.cellphone}} : {{userInfo.CellPhone}}</view>
+            <view>{{language.company}} : {{userInfo.Company}}</view>
+            <view>{{language.title}} : {{userInfo.Title}}</view>
         </view>
         <view class='splitLine marginBottom30'></view>
-        <view class="marginLeftRight50 eventTitle marginBottom30" wx:if="{{isSessionInfo}}">未找到可签到的场次信息</view>
-        <view class="marginLeftRight50 eventTitle marginBottom30" wx:else>请勾选嘉宾确认签到的场次：</view>
+        <view class="marginLeftRight50 eventTitle marginBottom30" wx:if="{{isSessionInfo}}">{{language.signin_7}}</view>
+        <view class="marginLeftRight50 eventTitle marginBottom30" wx:else>{{language.signin_8}}</view>
         <radio-group bindchange="checkboxChange" class="marginLeftRight50">
             <label class="radio" wx:for='{{sessionInfo}}'>
                 <view>
                     <radio value="{{item.SessionId}}" />{{item.Name}} ({{item.StartTime}})
+					<view class='signed'>{{item.userInfoComments}}</view>
+                    <view wx:if="{{item.Signed}}" class='signed'>已签到</view>
                 </view>
             </label>
         </radio-group>
     </view>
 
     <view id="formCheck" wx:else>
-        <view class="formInfo marginLeftRight50 marginBottom30">请填写嘉宾的常用手机号来读取嘉宾的个人信息</view>
+        <view class="formInfo marginLeftRight50 marginBottom30">{{language.signin_9}}</view>
         <view class="formInput marginLeftRight50 marginBottom30">
-            <label>手机</label>
-            <input type="tel" name="inputTelephone" bindinput='getCellPhone' id="inputTelephone" value="" placeholder="请填写嘉宾的手机号码"></input>
+            <label>{{language.cellphone}}</label>
+            <input type="tel" name="inputTelephone" bindinput='getCellPhone' id="inputTelephone" value="" placeholder="{{language.signin_11}}"></input>
         </view>
     </view>
 </view>
@@ -35,9 +37,9 @@
 <view class="buttonGroup blockRadius blockShadow {{isIPX?'isIPX':''}}" wx:if="{{isActionId}}">
     <!-- <view bindtap='signInConfirm' class='button paddingTopBottom25'>确认签到</view> -->
     <form bindsubmit='signInConfirm' style='width:100%'>
-        <button formType="submit" class='button formBotton'>确认签到</button>
+        <button formType="submit" class='button formBotton'>{{language.signin_12}}</button>
     </form>
 </view>
 <view class="buttonGroup blockRadius blockShadow {{isIPX?'isIPX':''}}" wx:else>
-    <view bindtap='userConfirm' class='button paddingTopBottom25'>身份验证</view>
+    <view bindtap='userConfirm' class='button paddingTopBottom25'>{{language.signin_13}}</view>
 </view>

@@ -86,6 +86,9 @@ img, video {
 .paddingBottom130 {
     padding-bottom: 130rpx;
 }
+.paddingBottom198 {
+    padding-bottom: 198rpx;
+}
 
 .hide {
     display: none;
@@ -102,7 +105,7 @@ img, video {
 }
 
 #nav-bottom.bottom68 {
-    bottom: 68rpx;
+    padding-bottom: 68rpx;
 }
 
 .splitLine {
@@ -113,13 +116,6 @@ img, video {
     background-color: #bbb;
 }
 
-#bottomIPX {
-    position: fixed;
-    bottom: 0 !important;
-    width: 100%;
-    height: 68rpx;
-    background: #fff;
-}
 
 #main-container {
     position: absolute;
@@ -318,11 +314,17 @@ img, video {
     margin-right: 20rpx;
 }
 
-.formInput input {
+.formInput input,.formInput picker{
     font-size: 24rpx;
     flex: 1 1 auto;
 }
-
+.formInput picker{
+    height: 1.4rem;
+    line-height: 1.4rem;
+}
+.picker{
+    height: 1.4rem;
+}
 radio-group {
     margin: 20rpx auto;
     font-size: 24rpx;

@@ -1,0 +1,43 @@
+<!--pages/setup/setup.wxml-->
+<view id="main-container">
+    <view class="marginBottom50 pageTitle">{{language.setup_1}}</view>
+    <view class="formInput marginLeftRight50 marginBottom30">
+        <label>{{language.name}}</label>
+        <input type="text" name="inputName" id="inputName" value="{{userInfo.ChineseName}}" placeholder="" bindinput='inputName'></input>
+    </view>
+    <!-- <view class="formInput marginLeftRight50 marginBottom30">
+        <label>{{language.setup_3}}</label>
+        <input type="text" name="" id="" value="{{userInfo.EnglishName}}" placeholder="" bindinput='inputEnglishName'></input>
+    </view> -->
+    <view class="formInput marginLeftRight50 marginBottom30">
+        <label>{{language.cellphone}}</label>
+        <input type="tel" name="" id="" value="{{userInfo.CellPhone}}" placeholder="" bindinput='inputTelPhone'></input>
+    </view>
+    <view class="formInput marginLeftRight50 marginBottom30">
+        <label>{{language.company}}</label>
+        <input type="text" name="" id="" value="{{userInfo.Company}}" placeholder="" bindinput='inputCompany'></input>
+    </view>
+    <view class="formInput marginLeftRight50 marginBottom30">
+        <label>{{language.title}}</label>
+        <input type="text" name="" id="" value="{{userInfo.Title}}" placeholder="" bindinput='inputTitle'></input>
+    </view>
+    <view class="formInput marginLeftRight50 marginBottom30">
+        <label>{{language.email}}</label>
+        <input type="text" name="" id="" value="{{userInfo.Email}}" placeholder="" bindinput='inputEmail'></input>
+    </view>
+    <view class="formInput marginLeftRight50 marginBottom30">
+        <label>{{language.setup_8}}</label>
+        <picker bindchange="bindPickerChange" value="{{index}}" range="{{array}}">
+            <view class="picker">{{Sex?Sex:userInfo.Sex}}</view>
+        </picker>
+    </view>
+    <view class="formInput marginLeftRight50 marginBottom30">
+        <label>{{language.setup_9}}</label>
+        <picker mode="date" value="{{date}}" start="1950-01-01" end="2018-01-01" bindchange="bindDateChange">
+            <view class="picker">{{date?date:userInfo.Birthday}}</view>
+        </picker>
+    </view>
+</view>
+<view class="buttonGroup blockRadius blockShadow {{isIPX?'isIPX':''}}">
+    <view bindtap='setUp' class='button paddingTopBottom25'>{{language.setup_10}}</view>
+</view>

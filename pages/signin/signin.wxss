@@ -13,3 +13,7 @@
 .form-input input{
     border-bottom: 1px solid #999
 }
+.signed{
+    margin-left: 30px;
+    font-size: 18rpx;
+}
